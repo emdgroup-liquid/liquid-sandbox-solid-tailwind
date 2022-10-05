@@ -13,6 +13,8 @@ import App from './App'
 setAssetPath(window.location.origin)
 const modules = await Promise.all([
   import('@emdgroup-liquid/liquid/dist/components/ld-bg-cells'),
+  import('@emdgroup-liquid/liquid/dist/components/ld-breadcrumbs'),
+  import('@emdgroup-liquid/liquid/dist/components/ld-crumb'),
   import('@emdgroup-liquid/liquid/dist/components/ld-button'),
   import('@emdgroup-liquid/liquid/dist/components/ld-checkbox'),
   import('@emdgroup-liquid/liquid/dist/components/ld-icon'),

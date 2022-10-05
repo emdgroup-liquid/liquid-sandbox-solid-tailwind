@@ -12,8 +12,9 @@ const Home: Component = () => {
       </ld-typo>
 
       <div class="bg-wht rounded-l shadow-hover p-ld-32 flex flex-col align-center justify-items-center">
-        <ld-typo variant="h2" class="mb-ld-32 text-center">
-          Get things done fast!
+        <ld-typo tag="h2" class="mb-ld-32 text-center">
+          Demo task management application created for accessibility user
+          testings.
         </ld-typo>
 
         <ld-button href="/login" mode="highlight" class="mx-auto">
