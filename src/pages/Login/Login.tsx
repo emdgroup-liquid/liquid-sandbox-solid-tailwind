@@ -1,7 +1,9 @@
 import type { Component } from 'solid-js'
 import { createEffect } from 'solid-js'
 import { createFormGroup, createFormControl } from 'solid-forms'
-import { TextInput } from '../../components/TextInput/TextInput'
+import Aside from '../../components/Aside/Aside'
+import Logo from '../../components/Logo/Logo'
+import TextInput from '../../components/TextInput/TextInput'
 import { useNavigate } from '@solidjs/router'
 
 const Login: Component = () => {
@@ -72,58 +74,70 @@ const Login: Component = () => {
   }
 
   return (
-    <form onSubmit={onSubmit}>
-      <ld-typo variant="b2" tag="h1" class="text-vy mb-ld-32">
-        Login
-      </ld-typo>
+    <div class="flex w-full">
+      <Aside>
+        <Logo tag="div" href="/" class="mb-ld-16" />
+      </Aside>
 
-      <ld-breadcrumbs
-        style={{
-          filter:
-            'invert(1) hue-rotate(180deg) brightness(1.5) saturate(0.7) drop-shadow(rgba(0, 0, 0, 0.2) 0px 1px 2px)',
-        }}
-        class="block mb-ld-24"
-      >
-        <ld-crumb href="/">Home</ld-crumb>
-        <ld-crumb href="/login/">Login</ld-crumb>
-      </ld-breadcrumbs>
-
-      <div class="bg-wht rounded-l shadow-hover p-ld-32 flex flex-col align-center justify-items-center">
-        <div class="grid grid-cols-1 md:grid-cols-1 gap-ld-24">
-          <TextInput
-            control={group.controls.email}
-            label="Email"
-            name="name"
-            placeholder="e.g. jason.parse@example.com"
-            tone="dark"
-            type="email"
+      <main class="flex flex-grow justify-center self-center px-ld-24 py-ld-40 min-h-screen sm:px-ld-40 lg:min-h-fit">
+        <div class="container flex-grow mx-auto relative max-w-2xl flex flex-col">
+          <Logo
+            tag="div"
+            href="/"
+            class="mb-ld-16 self-start block lg:hidden"
           />
 
-          <TextInput
-            control={group.controls.password}
-            label="Password"
-            name="password"
-            placeholder="••••••••••••"
-            tone="dark"
-            type="password"
-          />
+          <div class="my-auto">
+            <ld-typo variant="h1" class="block my-ld-40">
+              Login
+            </ld-typo>
 
-          <ld-button
-            href="/login"
-            mode="highlight"
-            onClick={onSubmit}
-            progress={group.isSubmitted ? 'pending' : undefined}
-          >
-            <span class="px-8">Login</span>
-          </ld-button>
+            <form
+              class="grid w-full grid-cols-1 md:grid-cols-1 gap-ld-24 pb-ld-40"
+              onSubmit={onSubmit}
+            >
+              <TextInput
+                control={group.controls.email}
+                label="Email"
+                name="name"
+                placeholder="e.g. jason.parse@example.com"
+                tone="dark"
+                type="email"
+              />
 
-          <ld-typo variant="body-m" tag="h2">
-            Don't have an account yet?&ensp;
-            <ld-link href="/signup">Sign&nbsp;up&nbsp;here.</ld-link>
-          </ld-typo>
+              <TextInput
+                control={group.controls.password}
+                label="Password"
+                name="password"
+                placeholder="••••••••••••"
+                tone="dark"
+                type="password"
+              />
+
+              <ld-button
+                mode="highlight"
+                onClick={onSubmit}
+                progress={group.isSubmitted ? 'pending' : undefined}
+              >
+                <span class="px-8">Login</span>
+              </ld-button>
+            </form>
+
+            <div>
+              <ld-typo variant="body-m" tag="h2">
+                Don't have an account yet?&ensp;
+                <ld-link href="/signup">Sign&nbsp;up&nbsp;here.</ld-link>
+              </ld-typo>
+
+              <ld-typo>
+                Problems signing in?&ensp;
+                <ld-link href="/recover">Recover your account.</ld-link>
+              </ld-typo>
+            </div>
+          </div>
         </div>
-      </div>
-    </form>
+      </main>
+    </div>
   )
 }
 

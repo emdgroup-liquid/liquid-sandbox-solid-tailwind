@@ -2,17 +2,13 @@ import type { Component } from 'solid-js'
 
 const Footer: Component = () => {
   return (
-    <footer
-      class="relative flex-grow"
-      style="background: var(--ld-thm-primary-active)"
-    >
+    <footer class="relative bg-thm-primary-active">
       <div class="container text-center mx-auto px-ld-24 pt-12 pb-14 max-w-2xl flex flex-col items-center justify-center">
         <ld-typo class="text-wht mb-ld-12">
           Checkout the source code on
           <a
             href="https://github.com/emdgroup-liquid/liquid-sandbox-solid-tailwind"
             class="ml-ld-4 inline-flex items-center"
-            style={{ color: 'var(--ld-thm-accent)' }}
           >
             GitHub
             <svg

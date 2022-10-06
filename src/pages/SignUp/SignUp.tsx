@@ -1,7 +1,7 @@
 import type { Component } from 'solid-js'
 import { createEffect } from 'solid-js'
 import { createFormGroup, createFormControl } from 'solid-forms'
-import { TextInput } from '../../components/TextInput/TextInput'
+import TextInput from '../../components/TextInput/TextInput'
 import { useNavigate } from '@solidjs/router'
 
 const SignUp: Component = () => {

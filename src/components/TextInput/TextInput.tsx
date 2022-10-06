@@ -11,7 +11,7 @@ interface TextInputProps {
   successMessage?: string | JSX.Element
 }
 
-export const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
+const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
   // Provide a default form control in case the user doesn't supply one.
   props = mergeProps({ control: createFormControl('') }, props)
   if (!props.control) return ''
@@ -54,3 +54,5 @@ export const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
     </ld-label>
   )
 }
+
+export default TextInput
