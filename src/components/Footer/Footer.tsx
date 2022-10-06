@@ -6,7 +6,7 @@ const Footer: Component = () => {
       class="relative flex-grow"
       style="background: var(--ld-thm-primary-active)"
     >
-      <div class="container text-center mx-auto px-ld-24 pt-20 pb-24 max-w-2xl flex flex-col items-center justify-center">
+      <div class="container text-center mx-auto px-ld-24 pt-12 pb-14 max-w-2xl flex flex-col items-center justify-center">
         <ld-typo class="text-wht mb-ld-12">
           Checkout the source code on
           <a

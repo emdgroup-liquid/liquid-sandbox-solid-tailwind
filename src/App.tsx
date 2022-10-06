@@ -9,7 +9,7 @@ const App: Component = () => {
   return (
     <div class="flex flex-col min-h-screen">
       <ld-notification placement="bottom" />
-      <div class="relative flex items-center" style="min-height: 80vh">
+      <div class="relative flex items-center" style="min-height: 90vh">
         <main class="container mx-auto px-ld-24 pt-ld-40 pb-24 relative max-w-2xl">
           <Routes>
             <Route path="/" component={Home} />

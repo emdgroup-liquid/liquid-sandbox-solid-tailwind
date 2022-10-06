@@ -8,7 +8,7 @@ const Login: Component = () => {
   const navigate = useNavigate()
 
   const group = createFormGroup({
-    email: createFormControl('', {
+    email: createFormControl(localStorage.getItem('user_email') || '', {
       required: true,
       validators: (value: string) => {
         if (value.length === 0) return { missing: true }
@@ -117,9 +117,9 @@ const Login: Component = () => {
             <span class="px-8">Login</span>
           </ld-button>
 
-          <ld-typo variant="body-m" tag="h2" class="mb-ld-40">
+          <ld-typo variant="body-m" tag="h2">
             Don't have an account yet?&ensp;
-            <ld-link href="/signup">Sign up here.</ld-link>
+            <ld-link href="/signup">Sign&nbsp;up&nbsp;here.</ld-link>
           </ld-typo>
         </div>
       </div>
