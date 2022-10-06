@@ -18,10 +18,14 @@ const Aside: Component<AsideProps> = (props) => {
       {props.children}
 
       <ld-bg-cells
+        three-layers
         style={{
-          '--ld-bg-cells-layer-translation-x': '0%',
-          '--ld-bg-cells-layer-translation-y': '10%',
-          '--ld-bg-cells-layer-size': '250%',
+          '--ld-bg-cells-layer-translation-x': '-20%',
+          '--ld-bg-cells-layer-translation-y': '50%',
+          '--ld-bg-cells-layer-size': '410%',
+          '--ld-bg-cells-secondary-layer-size': '280%',
+          '--ld-bg-cells-secondary-layer-translation-y': '30%',
+          '--ld-bg-cells-secondary-layer-translation-x': '0%',
         }}
         class="block absolute inset-0 -z-10"
       />

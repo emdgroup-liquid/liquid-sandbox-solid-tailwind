@@ -79,7 +79,7 @@ const Login: Component = () => {
         <Logo tag="div" href="/" class="mb-ld-16" />
       </Aside>
 
-      <main class="flex flex-grow justify-center self-center px-ld-24 py-ld-40 min-h-screen sm:px-ld-40 lg:min-h-fit">
+      <main class="flex flex-grow justify-center self-center px-ld-24 py-ld-40 sm:px-ld-40 min-h-screen shadow-hover">
         <div class="container flex-grow mx-auto relative max-w-2xl flex flex-col">
           <Logo
             tag="div"
