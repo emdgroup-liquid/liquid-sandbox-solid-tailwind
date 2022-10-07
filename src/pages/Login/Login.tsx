@@ -7,6 +7,7 @@ import { useNavigate } from '@solidjs/router'
 
 const Login: Component = () => {
   const navigate = useNavigate()
+  let formRef: HTMLFormElement
 
   const group = createFormGroup({
     email: createFormControl(localStorage.getItem('user_email') || '', {
@@ -25,24 +26,18 @@ const Login: Component = () => {
     }),
   })
 
-  // This will automatically re-run whenever `group.isDisabled`, `group.isValid` or `group.value` change
-  // createEffect(() => {
-  //   if (group.isDisabled || !group.isValid) return
-  // })
-
   const onSubmit = async (ev: Event) => {
     ev.preventDefault()
     if (group.isSubmitted) return
 
+    group.controls.email.markTouched(true)
+    group.controls.password.markTouched(true)
     if (!group.isValid) {
-      dispatchEvent(
-        new CustomEvent('ldNotificationAdd', {
-          detail: {
-            content: 'The login data is invalid.',
-            type: 'alert',
-          },
-        })
-      )
+      setTimeout(() => {
+        formRef
+          .querySelector<HTMLInputElement>('.ld-input--invalid input')
+          ?.focus()
+      }, 100)
       return
     }
 
@@ -61,6 +56,7 @@ const Login: Component = () => {
     if (isLoginSuccessful) {
       navigate('/dashboard', { replace: true })
     } else {
+      formRef.querySelector<HTMLInputElement>('input[type="password"]')?.focus()
       dispatchEvent(
         new CustomEvent('ldNotificationAdd', {
           detail: {
@@ -96,6 +92,7 @@ const Login: Component = () => {
               class="grid w-full grid-cols-1 md:grid-cols-1 gap-ld-24 pb-ld-40"
               novalidate
               onSubmit={onSubmit}
+              ref={(el) => (formRef = el)}
             >
               <TextInput
                 autofocus
@@ -125,6 +122,9 @@ const Login: Component = () => {
               >
                 <span class="px-8">Login</span>
               </ld-button>
+
+              {/* We need an additional input to trigger form submission on enter. */}
+              <input class="hidden" type="submit" />
             </form>
 
             <div>

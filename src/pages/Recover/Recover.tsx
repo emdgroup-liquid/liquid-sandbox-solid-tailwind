@@ -1,11 +1,13 @@
 import type { Component } from 'solid-js'
-import { createEffect, createSignal } from 'solid-js'
+import { createEffect, createSignal, Show } from 'solid-js'
 import { createFormGroup, createFormControl } from 'solid-forms'
 import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
 import TextInput from '../../components/TextInput/TextInput'
 
 const Login: Component = () => {
+  let formRef: HTMLFormElement
+
   const [recoveryPending, setRecoveryPending] = createSignal(false)
 
   const group = createFormGroup({
@@ -28,15 +30,14 @@ const Login: Component = () => {
     ev.preventDefault()
     if (group.isSubmitted) return
 
+    group.controls.email.markTouched(true)
+
     if (!group.isValid) {
-      dispatchEvent(
-        new CustomEvent('ldNotificationAdd', {
-          detail: {
-            content: 'What you entered is not a valid email address.',
-            type: 'alert',
-          },
-        })
-      )
+      setTimeout(() => {
+        formRef
+          .querySelector<HTMLInputElement>('.ld-input--invalid input')
+          ?.focus()
+      }, 100)
       return
     }
 
@@ -79,54 +80,57 @@ const Login: Component = () => {
           />
 
           <div class="my-auto" role="region" aria-live="polite">
-            {!recoveryPending() ? (
-              <>
-                <ld-typo variant="h1" class="block my-ld-40">
-                  Recover your account
-                </ld-typo>
+            <Show
+              when={!recoveryPending()}
+              fallback={
+                <>
+                  <ld-typo variant="h1" class="block my-ld-40">
+                    You've got mail
+                  </ld-typo>
 
-                <ld-typo class="block mb-ld-32">
-                  We can help you reset your password. Enter your account email,
-                  so that we can send you a password reset link.
-                </ld-typo>
+                  <ld-typo class="block mb-ld-32">
+                    We have sent you a password reset link via email.
+                  </ld-typo>
 
-                <form
-                  class="grid w-full grid-cols-1 md:grid-cols-1 gap-ld-24 pb-ld-40"
-                  onSubmit={onSubmit}
+                  <ld-link href="/login">Back to Login</ld-link>
+                </>
+              }
+            >
+              <ld-typo variant="h1" class="block my-ld-40">
+                Recover your account
+              </ld-typo>
+
+              <ld-typo class="block mb-ld-32">
+                We can help you reset your password. Enter your account email,
+                so that we can send you a password reset link.
+              </ld-typo>
+
+              <form
+                class="grid w-full grid-cols-1 md:grid-cols-1 gap-ld-24 pb-ld-40"
+                noValidate
+                onSubmit={onSubmit}
+                ref={(el) => (formRef = el)}
+              >
+                <TextInput
+                  control={group.controls.email}
+                  label="Account email"
+                  name="name"
+                  placeholder="e.g. jason.parse@example.com"
+                  tone="dark"
+                  type="email"
+                />
+
+                <ld-button
+                  mode="highlight"
+                  onClick={onSubmit}
+                  progress={group.isSubmitted ? 'pending' : undefined}
                 >
-                  <TextInput
-                    control={group.controls.email}
-                    label="Account email"
-                    name="name"
-                    placeholder="e.g. jason.parse@example.com"
-                    tone="dark"
-                    type="email"
-                  />
+                  <span class="px-8">Send </span>
+                </ld-button>
+              </form>
 
-                  <ld-button
-                    mode="highlight"
-                    onClick={onSubmit}
-                    progress={group.isSubmitted ? 'pending' : undefined}
-                  >
-                    <span class="px-8">Send </span>
-                  </ld-button>
-                </form>
-
-                <ld-link href="/login">Back to Login</ld-link>
-              </>
-            ) : (
-              <>
-                <ld-typo variant="h1" class="block my-ld-40">
-                  You've got mail
-                </ld-typo>
-
-                <ld-typo class="block mb-ld-32">
-                  We have sent you a password reset link via email.
-                </ld-typo>
-
-                <ld-link href="/login">Back to Login</ld-link>
-              </>
-            )}
+              <ld-link href="/login">Back to Login</ld-link>
+            </Show>
           </div>
         </div>
       </main>

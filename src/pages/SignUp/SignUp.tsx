@@ -3,17 +3,13 @@ import { createFormControl } from 'solid-forms'
 import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
 import TextInput from '../../components/TextInput/TextInput'
-import { createEffect, createSignal } from 'solid-js'
-import { getPasswordRating } from './passwordScore'
+import { createEffect, createSignal, For, Match, Show, Switch } from 'solid-js'
+import { getPasswordRating, getPasswordScore } from './passwordScore'
 import { useNavigate } from '@solidjs/router'
 
 const SignUp: Component = () => {
   const navigate = useNavigate()
-
-  const steps = ['Enter your Email', 'Set password']
-  const [currentStep, setCurrentStep] = createSignal(0)
-  const [isSubmitted, setIsSubmitted] = createSignal(false)
-  const [passwordRating, setPasswordRating] = createSignal('poop')
+  let formRef: HTMLFormElement
 
   const emailControl = createFormControl(
     localStorage.getItem('user_email') || '',
@@ -36,20 +32,33 @@ const SignUp: Component = () => {
     }
   )
 
+  const steps = ['Enter your Email', 'Set password']
+  const [currentStep, setCurrentStep] = createSignal(0)
+  const [isSubmitted, setIsSubmitted] = createSignal(false)
+  const [passwordRating, setPasswordRating] = createSignal('poop')
+  const stepsDoneIndices: number[] = []
+  if (localStorage.getItem('user_email')) stepsDoneIndices.push(0)
+  if (localStorage.getItem('user_password')) stepsDoneIndices.push(1)
+  const [stepsDone, setStepsDone] = createSignal(new Set(stepsDoneIndices))
+
   createEffect(() => {
+    if (stepsDone().size === steps.length) {
+      navigate('/dashboard', { replace: true })
+      return
+    }
+
     setPasswordRating(getPasswordRating(passwordControl.value))
   })
 
   const onSubmitEmail = async () => {
+    emailControl.markTouched(true)
+
     if (!emailControl.isValid) {
-      dispatchEvent(
-        new CustomEvent('ldNotificationAdd', {
-          detail: {
-            content: 'This email is invalid.',
-            type: 'alert',
-          },
-        })
-      )
+      setTimeout(() => {
+        formRef
+          .querySelector<HTMLInputElement>('.ld-input--invalid input')
+          ?.focus()
+      }, 100)
       return
     }
 
@@ -62,19 +71,19 @@ const SignUp: Component = () => {
     emailControl.markSubmitted(false)
 
     localStorage.setItem('user_email', email)
+    setStepsDone(new Set([...stepsDone(), 0]))
     setCurrentStep(1)
   }
 
   const onSubmitPassword = async () => {
+    passwordControl.markTouched(true)
+
     if (!passwordControl.isValid) {
-      dispatchEvent(
-        new CustomEvent('ldNotificationAdd', {
-          detail: {
-            content: 'This password does not suffice the safety requirements.',
-            type: 'alert',
-          },
-        })
-      )
+      setTimeout(() => {
+        formRef
+          .querySelector<HTMLInputElement>('.ld-input--invalid input')
+          ?.focus()
+      }, 100)
       return
     }
 
@@ -87,6 +96,8 @@ const SignUp: Component = () => {
     passwordControl.markSubmitted(false)
 
     localStorage.setItem('user_password', password)
+    setStepsDone(new Set([...stepsDone(), 1]))
+
     navigate('/dashboard', { replace: true })
   }
 
@@ -118,20 +129,21 @@ const SignUp: Component = () => {
         </ld-typo>
 
         <ld-stepper vertical brand-color>
-          {steps.map((stepLabel, index) => (
-            <ld-step
-              current={index === currentStep()}
-              disabled={index > currentStep()}
-              done={index < currentStep()}
-              last-active={index === currentStep()}
-              onClick={() => {
-                if (index >= currentStep()) return
-                setCurrentStep(index)
-              }}
-            >
-              {stepLabel}
-            </ld-step>
-          ))}
+          <For each={steps}>
+            {(stepLabel, i) => (
+              <ld-step
+                current={i() === currentStep()}
+                disabled={i() > currentStep() && !stepsDone().has(i() - 1)}
+                done={i() < currentStep() || stepsDone().has(i())}
+                last-active={i() === currentStep()}
+                onClick={() => {
+                  setCurrentStep(i())
+                }}
+              >
+                {stepLabel}
+              </ld-step>
+            )}
+          </For>
         </ld-stepper>
       </Aside>
 
@@ -153,22 +165,23 @@ const SignUp: Component = () => {
               class="grid w-full grid-cols-1 md:grid-cols-1 gap-ld-24 pb-ld-40"
               novalidate
               onSubmit={onSubmit}
+              ref={(el) => (formRef = el)}
             >
-              {currentStep() === 0 && (
-                <TextInput
-                  autocomplete="email"
-                  autofocus
-                  control={emailControl}
-                  label="Email"
-                  name="name"
-                  // placeholder="e.g. jason.parse@example.com"
-                  tone="dark"
-                  type="email"
-                />
-              )}
-
-              {currentStep() === 1 && (
-                <>
+              <Switch
+                fallback={
+                  <TextInput
+                    autocomplete="email"
+                    autofocus
+                    control={emailControl}
+                    label="Email"
+                    name="name"
+                    // placeholder="e.g. jason.parse@example.com"
+                    tone="dark"
+                    type="email"
+                  />
+                }
+              >
+                <Match when={currentStep() === 1}>
                   <TextInput
                     autocomplete="new-password"
                     autofocus
@@ -211,20 +224,10 @@ const SignUp: Component = () => {
                         '--ld-progress-bar-col': 'var(--password-rating-col)',
                       }}
                       aria-label={passwordRating()}
-                      aria-valuemax="4"
-                      aria-valuenow={(() => {
-                        if (!passwordControl.value) return 0
-                        switch (passwordRating()) {
-                          case 'strong':
-                            return 4
-                          case 'good':
-                            return 3
-                          case 'weak':
-                            return 2
-                          default:
-                            return 1
-                        }
-                      })()}
+                      aria-valuenow={Math.min(
+                        100,
+                        getPasswordScore(passwordControl.value)
+                      )}
                       // steps
                     ></ld-progress>
                     <ld-typo
@@ -235,8 +238,8 @@ const SignUp: Component = () => {
                       {passwordRating()}
                     </ld-typo>
                   </div>
-                </>
-              )}
+                </Match>
+              </Switch>
 
               <ld-button
                 mode="highlight"
@@ -256,12 +259,12 @@ const SignUp: Component = () => {
               </ld-button>
             </form>
 
-            {currentStep() === steps.length - 1 && (
+            <Show when={currentStep() === steps.length - 1}>
               <ld-typo id="conditions-notice" variant="body-m" tag="h2">
                 By creating an account with us, you agree to our{' '}
                 <ld-link href="/terms">terms&nbsp;and&nbsp;conditions</ld-link>.
               </ld-typo>
-            )}
+            </Show>
 
             <ld-typo variant="body-m" tag="h2" class="mb-ld-40">
               Already have an account?&ensp;
@@ -275,19 +278,20 @@ const SignUp: Component = () => {
             </ld-typo>
 
             <ld-stepper size="sm">
-              {steps.map((stepLabel, index) => (
-                <ld-step
-                  aria-label={stepLabel}
-                  current={index === currentStep()}
-                  disabled={index > currentStep()}
-                  done={index < currentStep()}
-                  last-active={index === currentStep()}
-                  onClick={() => {
-                    if (index >= currentStep()) return
-                    setCurrentStep(index)
-                  }}
-                />
-              ))}
+              <For each={steps}>
+                {(stepLabel, i) => (
+                  <ld-step
+                    aria-label={stepLabel}
+                    current={i() === currentStep()}
+                    disabled={i() > currentStep() && !stepsDone().has(i() - 1)}
+                    done={i() < currentStep() || stepsDone().has(i())}
+                    last-active={i() === currentStep()}
+                    onClick={() => {
+                      setCurrentStep(i())
+                    }}
+                  />
+                )}
+              </For>
             </ld-stepper>
           </div>
         </div>

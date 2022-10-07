@@ -37,6 +37,8 @@ const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
   }
 
   let inputRef: HTMLInputElement
+  let inputWrapperRef: HTMLDivElement
+
   onMount(() => {
     if (!props.autofocus) return
     setTimeout(() => {
@@ -54,27 +56,30 @@ const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
           'ld-input--invalid':
             props.control.isTouched && !!props.control.errors,
         }}
+        onFocusOut={(ev) => {
+          const hasFocusInside =
+            (ev.relatedTarget as HTMLElement)?.closest('.ld-input') ===
+            inputWrapperRef
+          if (hasFocusInside) return
+          setPasswordVisible(false)
+        }}
+        ref={(el) => (inputWrapperRef = el)}
       >
         <input
           autocapitalize="off"
           autocomplete={props.autocomplete}
-          type={
-            props.type === 'password' && passwordVisible() ? 'text' : props.type
-          }
-          placeholder={props.placeholder}
-          value={props.control.value}
-          required={props.control.isRequired}
-          spellcheck={!!props.spellcheck}
           onInput={(ev) => {
             const eventTarget = ev.currentTarget
             props.control?.setValue(eventTarget.value || '')
           }}
-          onBlur={() => {
-            setTimeout(() => {
-              props.control?.markTouched(true)
-            }, 200)
-          }}
+          placeholder={props.placeholder}
           ref={(el) => (inputRef = el)}
+          required={props.control.isRequired}
+          spellcheck={!!props.spellcheck}
+          type={
+            props.type === 'password' && passwordVisible() ? 'text' : props.type
+          }
+          value={props.control.value}
         />
         {props.type === 'password' && (
           <ld-button

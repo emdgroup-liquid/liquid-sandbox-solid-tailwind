@@ -19,25 +19,6 @@ const App: Component = () => {
           <Route path="/recover" component={Recover} />
           <Route path="/signup" component={SignUp} />
         </Routes>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <ld-bg-cells
-                style={{
-                  '--ld-bg-cells-layer-translation-x': '-90%',
-                  '--ld-bg-cells-layer-translation-y': '30%',
-                  '--ld-bg-cells-layer-size': '330%',
-                  '--ld-bg-cells-secondary-layer-size': '190%',
-                  '--ld-bg-cells-secondary-layer-translation-y': '-10%',
-                  '--ld-bg-cells-secondary-layer-translation-x': '-30%',
-                }}
-                three-layers
-                class="block absolute inset-0 -z-10"
-              />
-            }
-          />
-        </Routes>
       </div>
       <Routes>
         <Route path="/" component={Footer} />
