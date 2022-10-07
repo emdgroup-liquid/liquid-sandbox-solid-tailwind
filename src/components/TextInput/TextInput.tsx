@@ -1,13 +1,17 @@
 import { Show, mergeProps, type Component, JSX } from 'solid-js'
 import { createFormControl, IFormControl } from 'solid-forms'
+import '@emdgroup-liquid/liquid/dist/css/ld-input.css'
 
 interface TextInputProps {
+  ref?: (el: HTMLInputElement) => void
+  autofocus?: boolean
   control?: IFormControl
   label: string | JSX.Element
   name?: string
   placeholder?: string
   type?: string
   tone?: 'dark'
+  autocomplete?: string
   successMessage?: string | JSX.Element
 }
 
@@ -19,19 +23,28 @@ const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
   return (
     <ld-label>
       {props.label}
-      <ld-input
-        type={props.type}
-        tone={props.tone}
-        placeholder={props.placeholder}
-        value={props.control.value}
-        invalid={props.control.isTouched && !!props.control.errors}
-        required={props.control.isRequired}
-        onLdinput={(ev) => {
-          const eventTarget = ev.currentTarget as HTMLLdInputElement
-          props.control?.setValue(eventTarget.value || '')
+      <div
+        class="ld-input"
+        classList={{
+          'ld-input--dark': props.tone === 'dark',
+          'ld-input--invalid':
+            props.control.isTouched && !!props.control.errors,
         }}
-        onblur={() => props.control?.markTouched(true)}
-      ></ld-input>
+      >
+        <input
+          autocomplete={props.autocomplete}
+          type={props.type}
+          placeholder={props.placeholder}
+          value={props.control.value}
+          ref={props.ref}
+          required={props.control.isRequired}
+          onInput={(ev) => {
+            const eventTarget = ev.currentTarget
+            props.control?.setValue(eventTarget.value || '')
+          }}
+          onBlur={() => props.control?.markTouched(true)}
+        />
+      </div>
       <Show when={props.control.isTouched && props.control.errors?.missing}>
         <ld-input-message mode="error">
           {props.label} is required.

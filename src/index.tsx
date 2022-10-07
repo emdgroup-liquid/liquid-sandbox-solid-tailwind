@@ -27,6 +27,8 @@ const modules = await Promise.all([
   import('@emdgroup-liquid/liquid/dist/components/ld-option-internal'),
   import('@emdgroup-liquid/liquid/dist/components/ld-select-popper'),
   import('@emdgroup-liquid/liquid/dist/components/ld-select'),
+  import('@emdgroup-liquid/liquid/dist/components/ld-stepper'),
+  import('@emdgroup-liquid/liquid/dist/components/ld-step'),
   import('@emdgroup-liquid/liquid/dist/components/ld-tooltip'),
   import('@emdgroup-liquid/liquid/dist/components/ld-tooltip-popper'),
   import('@emdgroup-liquid/liquid/dist/components/ld-typo'),

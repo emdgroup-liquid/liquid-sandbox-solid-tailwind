@@ -8,7 +8,7 @@ const Home: Component = () => {
 
       <div class="bg-wht rounded-l shadow-hover p-ld-32 flex flex-col align-center justify-items-center">
         <ld-typo tag="h2" class="mb-ld-32 text-center">
-          Demo task management application created for accessibility user
+          Demo task management application for accessibility focused user
           testings.
         </ld-typo>
 

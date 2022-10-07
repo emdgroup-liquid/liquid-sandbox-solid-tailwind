@@ -15,7 +15,7 @@ const Logo: Component<LogoProps> = (props) => {
       class={props.class}
       classList={{ 'text-vy': true, ...(props.classList || {}) }}
       tag={props.tag || 'h1'}
-      variant={props.variant || 'b4'}
+      variant={props.variant || 'b5'}
     >
       <a href={props.href} class="contents">
         <abbr class="text-vc" aria-label="Uxer Experience, Stragegy and Design">

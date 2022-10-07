@@ -1,13 +1,18 @@
 import type { Component } from 'solid-js'
-import { createEffect } from 'solid-js'
 import { createFormGroup, createFormControl } from 'solid-forms'
 import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
 import TextInput from '../../components/TextInput/TextInput'
 import { useNavigate } from '@solidjs/router'
+import { onMount } from 'solid-js'
 
 const Login: Component = () => {
   const navigate = useNavigate()
+
+  let focusMeRef: HTMLInputElement
+  const refCallback = (el: HTMLInputElement) => {
+    focusMeRef = el
+  }
 
   const group = createFormGroup({
     email: createFormControl(localStorage.getItem('user_email') || '', {
@@ -27,8 +32,14 @@ const Login: Component = () => {
   })
 
   // This will automatically re-run whenever `group.isDisabled`, `group.isValid` or `group.value` change
-  createEffect(() => {
-    if (group.isDisabled || !group.isValid) return
+  // createEffect(() => {
+  //   if (group.isDisabled || !group.isValid) return
+  // })
+
+  onMount(() => {
+    setTimeout(() => {
+      focusMeRef.focus()
+    })
   })
 
   const onSubmit = async (ev: Event) => {
@@ -88,15 +99,18 @@ const Login: Component = () => {
           />
 
           <div class="my-auto">
-            <ld-typo variant="h1" class="block my-ld-40">
+            <ld-typo variant="h1" class="block mb-ld-40">
               Login
             </ld-typo>
 
             <form
+              autocomplete="on"
               class="grid w-full grid-cols-1 md:grid-cols-1 gap-ld-24 pb-ld-40"
               onSubmit={onSubmit}
             >
               <TextInput
+                ref={refCallback}
+                autocomplete="email"
                 control={group.controls.email}
                 label="Email"
                 name="name"
