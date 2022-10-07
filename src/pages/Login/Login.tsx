@@ -59,7 +59,7 @@ const Login: Component = () => {
       password === localStorage.getItem('user_password')
 
     if (isLoginSuccessful) {
-      navigate('/home', { replace: true })
+      navigate('/dashboard', { replace: true })
     } else {
       dispatchEvent(
         new CustomEvent('ldNotificationAdd', {

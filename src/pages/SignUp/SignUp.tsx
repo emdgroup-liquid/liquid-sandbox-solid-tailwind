@@ -5,27 +5,36 @@ import Logo from '../../components/Logo/Logo'
 import TextInput from '../../components/TextInput/TextInput'
 import { createEffect, createSignal } from 'solid-js'
 import { getPasswordRating } from './passwordScore'
+import { useNavigate } from '@solidjs/router'
 
 const SignUp: Component = () => {
+  const navigate = useNavigate()
+
   const steps = ['Enter your Email', 'Set password']
   const [currentStep, setCurrentStep] = createSignal(0)
   const [isSubmitted, setIsSubmitted] = createSignal(false)
   const [passwordRating, setPasswordRating] = createSignal('poop')
 
-  const emailControl = createFormControl('', {
-    required: true,
-    validators: (value: string) => {
-      if (value.length === 0) return { missing: true }
-      if (!value.includes('@')) return { invalid: true }
-      return null
-    },
-  })
-  const passwordControl = createFormControl('', {
-    required: true,
-    validators: (value: string) => {
-      return value.length === 0 ? { missing: true } : null
-    },
-  })
+  const emailControl = createFormControl(
+    localStorage.getItem('user_email') || '',
+    {
+      required: true,
+      validators: (value: string) => {
+        if (value.length === 0) return { missing: true }
+        if (!value.includes('@')) return { invalid: true }
+        return null
+      },
+    }
+  )
+  const passwordControl = createFormControl(
+    localStorage.getItem('user_password') || '',
+    {
+      required: true,
+      validators: (value: string) => {
+        return value.length === 0 ? { missing: true } : null
+      },
+    }
+  )
 
   createEffect(() => {
     setPasswordRating(getPasswordRating(passwordControl.value))
@@ -52,7 +61,7 @@ const SignUp: Component = () => {
     await new Promise((resolve) => setTimeout(resolve, 500))
     emailControl.markSubmitted(false)
 
-    console.info('TODO save email in state', email)
+    localStorage.setItem('user_email', email)
     setCurrentStep(1)
   }
 
@@ -61,7 +70,7 @@ const SignUp: Component = () => {
       dispatchEvent(
         new CustomEvent('ldNotificationAdd', {
           detail: {
-            content: 'This password does not suffice safety requirements.',
+            content: 'This password does not suffice the safety requirements.',
             type: 'alert',
           },
         })
@@ -77,7 +86,8 @@ const SignUp: Component = () => {
     await new Promise((resolve) => setTimeout(resolve, 500))
     passwordControl.markSubmitted(false)
 
-    console.info('TODO save password in state', password)
+    localStorage.setItem('user_password', password)
+    navigate('/dashboard', { replace: true })
   }
 
   const onSubmit = async (ev: Event) => {
@@ -111,8 +121,13 @@ const SignUp: Component = () => {
           {steps.map((stepLabel, index) => (
             <ld-step
               current={index === currentStep()}
+              disabled={index > currentStep()}
               done={index < currentStep()}
               last-active={index === currentStep()}
+              onClick={() => {
+                if (index >= currentStep()) return
+                setCurrentStep(index)
+              }}
             >
               {stepLabel}
             </ld-step>
@@ -191,7 +206,7 @@ const SignUp: Component = () => {
                       Password strengh:
                     </ld-typo>
                     <ld-progress
-                      class="flex-grow"
+                      class="flex-grow mb-ld-4"
                       style={{
                         '--ld-progress-bar-col': 'var(--password-rating-col)',
                       }}
@@ -214,7 +229,7 @@ const SignUp: Component = () => {
                     ></ld-progress>
                     <ld-typo
                       aria-hidden="true"
-                      class="w-full text-right h-ld-2 capitalize"
+                      class="w-full text-right h-0 capitalize"
                       variant="label-s"
                     >
                       {passwordRating()}
@@ -264,8 +279,13 @@ const SignUp: Component = () => {
                 <ld-step
                   aria-label={stepLabel}
                   current={index === currentStep()}
+                  disabled={index > currentStep()}
                   done={index < currentStep()}
                   last-active={index === currentStep()}
+                  onClick={() => {
+                    if (index >= currentStep()) return
+                    setCurrentStep(index)
+                  }}
                 />
               ))}
             </ld-stepper>

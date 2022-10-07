@@ -5,6 +5,7 @@ import Home from './pages/Home/Home'
 import Login from './pages/Login/Login'
 import Recover from './pages/Recover/Recover'
 import SignUp from './pages/SignUp/SignUp'
+import Dashboard from './pages/Dashboard/Dashboard'
 
 const App: Component = () => {
   return (
@@ -13,6 +14,7 @@ const App: Component = () => {
       <div class="relative flex items-center flex-grow">
         <Routes>
           <Route path="/" component={Home} />
+          <Route path="/dashboard" component={Dashboard} />
           <Route path="/login" component={Login} />
           <Route path="/recover" component={Recover} />
           <Route path="/signup" component={SignUp} />
