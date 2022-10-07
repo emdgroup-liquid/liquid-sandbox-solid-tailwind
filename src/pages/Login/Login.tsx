@@ -4,15 +4,9 @@ import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
 import TextInput from '../../components/TextInput/TextInput'
 import { useNavigate } from '@solidjs/router'
-import { onMount } from 'solid-js'
 
 const Login: Component = () => {
   const navigate = useNavigate()
-
-  let focusMeRef: HTMLInputElement
-  const refCallback = (el: HTMLInputElement) => {
-    focusMeRef = el
-  }
 
   const group = createFormGroup({
     email: createFormControl(localStorage.getItem('user_email') || '', {
@@ -35,12 +29,6 @@ const Login: Component = () => {
   // createEffect(() => {
   //   if (group.isDisabled || !group.isValid) return
   // })
-
-  onMount(() => {
-    setTimeout(() => {
-      focusMeRef.focus()
-    })
-  })
 
   const onSubmit = async (ev: Event) => {
     ev.preventDefault()
@@ -106,24 +94,26 @@ const Login: Component = () => {
             <form
               autocomplete="on"
               class="grid w-full grid-cols-1 md:grid-cols-1 gap-ld-24 pb-ld-40"
+              novalidate
               onSubmit={onSubmit}
             >
               <TextInput
-                ref={refCallback}
+                autofocus
                 autocomplete="email"
                 control={group.controls.email}
                 label="Email"
                 name="name"
-                placeholder="e.g. jason.parse@example.com"
+                // placeholder="e.g. jason.parse@example.com"
                 tone="dark"
                 type="email"
               />
 
               <TextInput
+                autocomplete="current-password"
                 control={group.controls.password}
                 label="Password"
                 name="password"
-                placeholder="••••••••••••"
+                // placeholder="••••••••••••"
                 tone="dark"
                 type="password"
               />

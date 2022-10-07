@@ -13,7 +13,7 @@ const Logo: Component<LogoProps> = (props) => {
     <ld-typo
       role="banner"
       class={props.class}
-      classList={{ 'text-vy': true, ...(props.classList || {}) }}
+      classList={props.classList}
       tag={props.tag || 'h1'}
       variant={props.variant || 'b5'}
     >
@@ -21,7 +21,7 @@ const Logo: Component<LogoProps> = (props) => {
         <abbr class="text-vc" aria-label="Uxer Experience, Stragegy and Design">
           UXSD
         </abbr>{' '}
-        <span aria-label="To-Do" class="whitespace-nowrap">
+        <span aria-label="To-Do" class="text-vy whitespace-nowrap">
           TO&hairsp;DO
         </span>
       </a>
