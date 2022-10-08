@@ -30,7 +30,7 @@ const Login: Component = () => {
     dispatchEvent(new CustomEvent('ldNotificationClear'))
     const session = await getSession()
     if (session) {
-      navigate('/dashboard', { replace: true })
+      navigate('/todo', { replace: true })
     }
     setLoading(false)
   })

@@ -73,7 +73,7 @@ const SignUp: Component = () => {
     dispatchEvent(new CustomEvent('ldNotificationClear'))
     const session = await getSession()
     if (session) {
-      navigate('/dashboard', { replace: true })
+      navigate('/todo', { replace: true })
     }
     setLoading(false)
   })
@@ -142,7 +142,7 @@ const SignUp: Component = () => {
     localStorage.removeItem('user_signup_email')
 
     // Redirect.
-    navigate('/dashboard', { replace: true })
+    navigate('/todo', { replace: true })
   }
 
   const onSubmit = async (ev: Event) => {

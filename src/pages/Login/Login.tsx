@@ -34,7 +34,7 @@ const Login: Component = () => {
     dispatchEvent(new CustomEvent('ldNotificationClear'))
     const session = await getSession()
     if (session) {
-      navigate('/dashboard', { replace: true })
+      navigate('/todo', { replace: true })
     }
     setLoading(false)
   })
@@ -62,7 +62,7 @@ const Login: Component = () => {
     group.markSubmitted(false)
 
     if (isLoginSuccessful) {
-      navigate('/dashboard', { replace: true })
+      navigate('/todo', { replace: true })
     } else {
       formRef.querySelector<HTMLInputElement>('input[type="password"]')?.focus()
       dispatchEvent(

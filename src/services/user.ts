@@ -34,5 +34,5 @@ export async function getSession() {
 
 export async function deleteSession() {
   await simulateFetch()
-  localStorage.getItem('user_session')
+  localStorage.removeItem('user_session')
 }
