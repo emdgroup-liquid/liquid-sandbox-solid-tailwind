@@ -5,6 +5,7 @@ async function simulateFetch() {
 export async function createUser(email: string, password: string) {
   await simulateFetch()
   localStorage.setItem(`user_${email}`, password)
+  localStorage.setItem('user_session', 'yes') // Fake session.
 }
 
 export async function userExists(email: string) {
