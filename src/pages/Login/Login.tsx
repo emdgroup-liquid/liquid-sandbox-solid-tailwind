@@ -28,7 +28,7 @@ const Login: Component = () => {
   })
 
   createEffect(() => {
-    if (localStorage.getItem('session')) {
+    if (localStorage.getItem('user_session')) {
       navigate('/dashboard', { replace: true })
     }
   })
@@ -61,6 +61,7 @@ const Login: Component = () => {
       password === localStorage.getItem('user_password')
 
     if (isLoginSuccessful) {
+      localStorage.setItem('user_session', 'yes') // Fake session.
       navigate('/dashboard', { replace: true })
     } else {
       formRef.querySelector<HTMLInputElement>('input[type="password"]')?.focus()

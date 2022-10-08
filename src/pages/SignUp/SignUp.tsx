@@ -42,7 +42,7 @@ const SignUp: Component = () => {
   const [stepsDone, setStepsDone] = createSignal(new Set(stepsDoneIndices))
 
   createEffect(() => {
-    if (localStorage.getItem('session')) {
+    if (localStorage.getItem('user_session')) {
       navigate('/dashboard', { replace: true })
       return
     }
@@ -95,7 +95,7 @@ const SignUp: Component = () => {
     passwordControl.markSubmitted(false)
 
     localStorage.setItem('user_password', password)
-    localStorage.setItem('session', 'yes') // Fake session.
+    localStorage.setItem('user_session', 'yes') // Fake session.
     setStepsDone(new Set([...stepsDone(), 1]))
 
     navigate('/dashboard', { replace: true })

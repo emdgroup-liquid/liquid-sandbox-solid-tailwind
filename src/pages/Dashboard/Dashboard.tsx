@@ -7,8 +7,8 @@ const Dashboard: Component = () => {
   const navigate = useNavigate()
 
   createEffect(() => {
-    if (!localStorage.getItem('session')) {
-      navigate('/', { replace: true })
+    if (!localStorage.getItem('user_session')) {
+      navigate('/login', { replace: true })
     }
   })
 
