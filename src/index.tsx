@@ -14,7 +14,6 @@ const modules = await Promise.all([
   import('@emdgroup-liquid/liquid/dist/components/ld-badge'),
   import('@emdgroup-liquid/liquid/dist/components/ld-button'),
   import('@emdgroup-liquid/liquid/dist/components/ld-icon'),
-  import('@emdgroup-liquid/liquid/dist/components/ld-input'),
   import('@emdgroup-liquid/liquid/dist/components/ld-input-message'),
   import('@emdgroup-liquid/liquid/dist/components/ld-label'),
   import('@emdgroup-liquid/liquid/dist/components/ld-loading'),
