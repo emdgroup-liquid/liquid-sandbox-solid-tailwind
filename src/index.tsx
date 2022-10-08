@@ -18,6 +18,7 @@ const modules = await Promise.all([
   import('@emdgroup-liquid/liquid/dist/components/ld-input'),
   import('@emdgroup-liquid/liquid/dist/components/ld-input-message'),
   import('@emdgroup-liquid/liquid/dist/components/ld-label'),
+  import('@emdgroup-liquid/liquid/dist/components/ld-loading'),
   import('@emdgroup-liquid/liquid/dist/components/ld-link'),
   import('@emdgroup-liquid/liquid/dist/components/ld-notification'),
   import('@emdgroup-liquid/liquid/dist/components/ld-option'),

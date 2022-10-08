@@ -1,12 +1,17 @@
 import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
 import TextInput from '../../components/TextInput/TextInput'
+import { getSession } from '../../services/user'
+import { useNavigate } from '@solidjs/router'
 import { createFormGroup, createFormControl } from 'solid-forms'
 import type { Component } from 'solid-js'
 import { createEffect, createSignal, Show } from 'solid-js'
 
 const Login: Component = () => {
+  const navigate = useNavigate()
   let formRef: HTMLFormElement
+
+  const [loading, setLoading] = createSignal(true)
 
   const [recoveryPending, setRecoveryPending] = createSignal(false)
 
@@ -21,9 +26,13 @@ const Login: Component = () => {
     }),
   })
 
-  // This will automatically re-run whenever `group.isDisabled`, `group.isValid` or `group.value` change
-  createEffect(() => {
-    if (group.isDisabled || !group.isValid) return
+  createEffect(async () => {
+    dispatchEvent(new CustomEvent('ldNotificationClear'))
+    const session = await getSession()
+    if (session) {
+      navigate('/dashboard', { replace: true })
+    }
+    setLoading(false)
   })
 
   const onSubmit = async (ev: Event) => {
@@ -71,67 +80,75 @@ const Login: Component = () => {
         <Logo tag="div" href="/" class="mb-ld-16" />
       </Aside>
 
-      <main class="flex flex-grow justify-center self-center px-ld-24 py-ld-40 min-h-screen sm:px-ld-40 lg:min-h-fit">
+      <main
+        aria-busy={loading()}
+        aria-live="polite"
+        class="flex flex-grow justify-center self-center px-ld-24 py-ld-40 min-h-screen sm:px-ld-40 lg:min-h-fit"
+      >
         <div class="container flex-grow mx-auto relative max-w-2xl flex flex-col">
-          <Logo
-            tag="div"
-            href="/"
-            class="mb-ld-16 self-start block lg:hidden"
-          />
+          <Show when={!loading()} fallback={<ld-loading class="m-auto" />}>
+            <>
+              <Logo
+                tag="div"
+                href="/"
+                class="mb-ld-16 self-start block lg:hidden"
+              />
 
-          <div class="my-auto" role="region" aria-live="polite">
-            <Show
-              when={!recoveryPending()}
-              fallback={
-                <>
+              <div class="my-auto" role="region" aria-live="polite">
+                <Show
+                  when={!recoveryPending()}
+                  fallback={
+                    <>
+                      <ld-typo variant="h1" class="block my-ld-40">
+                        You've got mail
+                      </ld-typo>
+
+                      <ld-typo class="block mb-ld-32">
+                        We have sent you a password reset link via email.
+                      </ld-typo>
+
+                      <ld-link href="/login">Back to Login</ld-link>
+                    </>
+                  }
+                >
                   <ld-typo variant="h1" class="block my-ld-40">
-                    You've got mail
+                    Recover your account
                   </ld-typo>
 
                   <ld-typo class="block mb-ld-32">
-                    We have sent you a password reset link via email.
+                    We can help you reset your password. Enter your account
+                    email, so that we can send you a password reset link.
                   </ld-typo>
 
+                  <form
+                    class="grid w-full grid-cols-1 md:grid-cols-1 gap-ld-24 pb-ld-40"
+                    noValidate
+                    onSubmit={onSubmit}
+                    ref={(el) => (formRef = el)}
+                  >
+                    <TextInput
+                      control={group.controls.email}
+                      label="Account email"
+                      name="name"
+                      placeholder="e.g. jason.parse@example.com"
+                      tone="dark"
+                      type="email"
+                    />
+
+                    <ld-button
+                      mode="highlight"
+                      onClick={onSubmit}
+                      progress={group.isSubmitted ? 'pending' : undefined}
+                    >
+                      <span class="px-8">Send </span>
+                    </ld-button>
+                  </form>
+
                   <ld-link href="/login">Back to Login</ld-link>
-                </>
-              }
-            >
-              <ld-typo variant="h1" class="block my-ld-40">
-                Recover your account
-              </ld-typo>
-
-              <ld-typo class="block mb-ld-32">
-                We can help you reset your password. Enter your account email,
-                so that we can send you a password reset link.
-              </ld-typo>
-
-              <form
-                class="grid w-full grid-cols-1 md:grid-cols-1 gap-ld-24 pb-ld-40"
-                noValidate
-                onSubmit={onSubmit}
-                ref={(el) => (formRef = el)}
-              >
-                <TextInput
-                  control={group.controls.email}
-                  label="Account email"
-                  name="name"
-                  placeholder="e.g. jason.parse@example.com"
-                  tone="dark"
-                  type="email"
-                />
-
-                <ld-button
-                  mode="highlight"
-                  onClick={onSubmit}
-                  progress={group.isSubmitted ? 'pending' : undefined}
-                >
-                  <span class="px-8">Send </span>
-                </ld-button>
-              </form>
-
-              <ld-link href="/login">Back to Login</ld-link>
-            </Show>
-          </div>
+                </Show>
+              </div>
+            </>
+          </Show>
         </div>
       </main>
     </div>

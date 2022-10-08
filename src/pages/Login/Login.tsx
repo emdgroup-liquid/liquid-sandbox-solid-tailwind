@@ -1,17 +1,20 @@
 import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
 import TextInput from '../../components/TextInput/TextInput'
+import { getSession, loginUser } from '../../services/user'
 import { useNavigate } from '@solidjs/router'
 import { createFormGroup, createFormControl } from 'solid-forms'
 import type { Component } from 'solid-js'
-import { createEffect } from 'solid-js'
+import { createEffect, createSignal, Show } from 'solid-js'
 
 const Login: Component = () => {
   const navigate = useNavigate()
   let formRef: HTMLFormElement
 
+  const [loading, setLoading] = createSignal(true)
+
   const group = createFormGroup({
-    email: createFormControl(localStorage.getItem('user_email') || '', {
+    email: createFormControl('', {
       required: true,
       validators: (value: string) => {
         if (value.length === 0) return { missing: true }
@@ -27,10 +30,13 @@ const Login: Component = () => {
     }),
   })
 
-  createEffect(() => {
-    if (localStorage.getItem('user_session')) {
+  createEffect(async () => {
+    dispatchEvent(new CustomEvent('ldNotificationClear'))
+    const session = await getSession()
+    if (session) {
       navigate('/dashboard', { replace: true })
     }
+    setLoading(false)
   })
 
   const onSubmit = async (ev: Event) => {
@@ -50,18 +56,12 @@ const Login: Component = () => {
 
     dispatchEvent(new CustomEvent('ldNotificationClear'))
 
-    // Simulate asynchronous fetch.
     group.markSubmitted(true)
     const { email, password } = group.value
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    const isLoginSuccessful = await loginUser(email, password)
     group.markSubmitted(false)
 
-    const isLoginSuccessful =
-      email === localStorage.getItem('user_email') &&
-      password === localStorage.getItem('user_password')
-
     if (isLoginSuccessful) {
-      localStorage.setItem('user_session', 'yes') // Fake session.
       navigate('/dashboard', { replace: true })
     } else {
       formRef.querySelector<HTMLInputElement>('input[type="password"]')?.focus()
@@ -82,71 +82,79 @@ const Login: Component = () => {
         <Logo tag="div" href="/" class="mb-ld-16" />
       </Aside>
 
-      <main class="flex flex-grow justify-center self-center px-ld-24 py-ld-40 sm:px-ld-40 min-h-screen shadow-hover">
+      <main
+        aria-busy={loading()}
+        aria-live="polite"
+        class="flex flex-grow justify-center self-center px-ld-24 py-ld-40 sm:px-ld-40 min-h-screen shadow-hover"
+      >
         <div class="container flex-grow mx-auto relative max-w-2xl flex flex-col">
-          <Logo
-            tag="div"
-            href="/"
-            class="mb-ld-16 self-start block lg:hidden"
-          />
-
-          <div class="my-auto">
-            <ld-typo variant="h1" class="block mb-ld-40">
-              Login
-            </ld-typo>
-
-            <form
-              autocomplete="on"
-              class="grid w-full grid-cols-1 md:grid-cols-1 gap-ld-24 pb-ld-40"
-              novalidate
-              onSubmit={onSubmit}
-              ref={(el) => (formRef = el)}
-            >
-              <TextInput
-                autofocus
-                autocomplete="email"
-                control={group.controls.email}
-                label="Email"
-                name="name"
-                // placeholder="e.g. jason.parse@example.com"
-                tone="dark"
-                type="email"
+          <Show when={!loading()} fallback={<ld-loading class="m-auto" />}>
+            <>
+              <Logo
+                tag="div"
+                href="/"
+                class="mb-ld-16 self-start block lg:hidden"
               />
 
-              <TextInput
-                autocomplete="current-password"
-                control={group.controls.password}
-                label="Password"
-                name="password"
-                // placeholder="••••••••••••"
-                tone="dark"
-                type="password"
-              />
+              <div class="my-auto">
+                <ld-typo variant="h1" class="block mb-ld-40">
+                  Login
+                </ld-typo>
 
-              <ld-button
-                mode="highlight"
-                onClick={onSubmit}
-                progress={group.isSubmitted ? 'pending' : undefined}
-              >
-                <span class="px-8">Login</span>
-              </ld-button>
+                <form
+                  autocomplete="on"
+                  class="grid w-full grid-cols-1 md:grid-cols-1 gap-ld-24 pb-ld-40"
+                  novalidate
+                  onSubmit={onSubmit}
+                  ref={(el) => (formRef = el)}
+                >
+                  <TextInput
+                    autofocus
+                    autocomplete="email"
+                    control={group.controls.email}
+                    label="Email"
+                    name="name"
+                    // placeholder="e.g. jason.parse@example.com"
+                    tone="dark"
+                    type="email"
+                  />
 
-              {/* We need an additional input to trigger form submission on enter. */}
-              <input class="hidden" type="submit" />
-            </form>
+                  <TextInput
+                    autocomplete="current-password"
+                    control={group.controls.password}
+                    label="Password"
+                    name="password"
+                    // placeholder="••••••••••••"
+                    tone="dark"
+                    type="password"
+                  />
 
-            <div>
-              <ld-typo variant="body-m" tag="h2">
-                Don't have an account yet?&ensp;
-                <ld-link href="/signup">Sign&nbsp;up&nbsp;here.</ld-link>
-              </ld-typo>
+                  <ld-button
+                    mode="highlight"
+                    onClick={onSubmit}
+                    progress={group.isSubmitted ? 'pending' : undefined}
+                  >
+                    <span class="px-8">Login</span>
+                  </ld-button>
 
-              <ld-typo>
-                Problems signing in?&ensp;
-                <ld-link href="/recover">Recover your account.</ld-link>
-              </ld-typo>
-            </div>
-          </div>
+                  {/* We need an additional input to trigger form submission on enter. */}
+                  <input class="hidden" type="submit" />
+                </form>
+
+                <div>
+                  <ld-typo variant="body-m" tag="h2">
+                    Don't have an account yet?&ensp;
+                    <ld-link href="/signup">Sign&nbsp;up&nbsp;here.</ld-link>
+                  </ld-typo>
+
+                  <ld-typo>
+                    Problems signing in?&ensp;
+                    <ld-link href="/recover">Recover your account.</ld-link>
+                  </ld-typo>
+                </div>
+              </div>
+            </>
+          </Show>
         </div>
       </main>
     </div>

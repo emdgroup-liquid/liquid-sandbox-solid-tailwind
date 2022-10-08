@@ -89,7 +89,11 @@ const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
             aria-checked={passwordVisible()}
             mode="ghost"
           >
-            <ld-icon>
+            <ld-icon
+              style={{
+                'pointer-events': 'none',
+              }}
+            >
               <svg
                 width="20"
                 height="20"
