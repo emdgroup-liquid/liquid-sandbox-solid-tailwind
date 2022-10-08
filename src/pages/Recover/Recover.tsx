@@ -1,9 +1,9 @@
-import type { Component } from 'solid-js'
-import { createEffect, createSignal, Show } from 'solid-js'
-import { createFormGroup, createFormControl } from 'solid-forms'
 import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
 import TextInput from '../../components/TextInput/TextInput'
+import { createFormGroup, createFormControl } from 'solid-forms'
+import type { Component } from 'solid-js'
+import { createEffect, createSignal, Show } from 'solid-js'
 
 const Login: Component = () => {
   let formRef: HTMLFormElement

@@ -1,11 +1,11 @@
-import type { Component } from 'solid-js'
-import { createFormControl } from 'solid-forms'
 import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
 import TextInput from '../../components/TextInput/TextInput'
-import { createEffect, createSignal, For, Match, Show, Switch } from 'solid-js'
 import { getPasswordRating, getPasswordScore } from './passwordScore'
 import { useNavigate } from '@solidjs/router'
+import { createFormControl } from 'solid-forms'
+import type { Component } from 'solid-js'
+import { createEffect, createSignal, For, Match, Show, Switch } from 'solid-js'
 
 const SignUp: Component = () => {
   const navigate = useNavigate()
@@ -42,11 +42,10 @@ const SignUp: Component = () => {
   const [stepsDone, setStepsDone] = createSignal(new Set(stepsDoneIndices))
 
   createEffect(() => {
-    if (stepsDone().size === steps.length) {
+    if (localStorage.getItem('session')) {
       navigate('/dashboard', { replace: true })
       return
     }
-
     setPasswordRating(getPasswordRating(passwordControl.value))
   })
 
@@ -96,6 +95,7 @@ const SignUp: Component = () => {
     passwordControl.markSubmitted(false)
 
     localStorage.setItem('user_password', password)
+    localStorage.setItem('session', 'yes') // Fake session.
     setStepsDone(new Set([...stepsDone(), 1]))
 
     navigate('/dashboard', { replace: true })

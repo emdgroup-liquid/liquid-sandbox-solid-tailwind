@@ -1,9 +1,10 @@
-import type { Component } from 'solid-js'
-import { createFormGroup, createFormControl } from 'solid-forms'
 import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
 import TextInput from '../../components/TextInput/TextInput'
 import { useNavigate } from '@solidjs/router'
+import { createFormGroup, createFormControl } from 'solid-forms'
+import type { Component } from 'solid-js'
+import { createEffect } from 'solid-js'
 
 const Login: Component = () => {
   const navigate = useNavigate()
@@ -24,6 +25,12 @@ const Login: Component = () => {
         return value.length === 0 ? { missing: true } : null
       },
     }),
+  })
+
+  createEffect(() => {
+    if (localStorage.getItem('session')) {
+      navigate('/dashboard', { replace: true })
+    }
   })
 
   const onSubmit = async (ev: Event) => {

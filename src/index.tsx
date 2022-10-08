@@ -1,13 +1,10 @@
 /* @refresh reload */
-import { render } from 'solid-js/web'
-import { Router } from '@solidjs/router'
-
-import { setAssetPath } from '@emdgroup-liquid/liquid/dist/components'
-
-import '@emdgroup-liquid/liquid/dist/css/liquid.global.css'
-
-import './index.css'
 import App from './App'
+import './index.css'
+import { setAssetPath } from '@emdgroup-liquid/liquid/dist/components'
+import '@emdgroup-liquid/liquid/dist/css/liquid.global.css'
+import { Router } from '@solidjs/router'
+import { render } from 'solid-js/web'
 
 // Load liquid components.
 setAssetPath(window.location.origin)

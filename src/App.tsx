@@ -1,11 +1,11 @@
-import type { Component } from 'solid-js'
-import { Routes, Route } from '@solidjs/router'
 import Footer from './components/Footer/Footer'
+import Dashboard from './pages/Dashboard/Dashboard'
 import Home from './pages/Home/Home'
 import Login from './pages/Login/Login'
 import Recover from './pages/Recover/Recover'
 import SignUp from './pages/SignUp/SignUp'
-import Dashboard from './pages/Dashboard/Dashboard'
+import { Routes, Route } from '@solidjs/router'
+import type { Component } from 'solid-js'
 
 const App: Component = () => {
   return (

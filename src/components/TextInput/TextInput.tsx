@@ -1,3 +1,5 @@
+import '@emdgroup-liquid/liquid/dist/css/ld-input.css'
+import { createFormControl, IFormControl } from 'solid-forms'
 import {
   Show,
   mergeProps,
@@ -6,8 +8,6 @@ import {
   onMount,
   createSignal,
 } from 'solid-js'
-import { createFormControl, IFormControl } from 'solid-forms'
-import '@emdgroup-liquid/liquid/dist/css/ld-input.css'
 
 interface TextInputProps {
   autocomplete?: string

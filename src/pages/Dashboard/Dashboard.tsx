@@ -1,7 +1,17 @@
-import type { Component } from 'solid-js'
 import Logo from '../../components/Logo/Logo'
+import { useNavigate } from '@solidjs/router'
+import type { Component } from 'solid-js'
+import { createEffect } from 'solid-js'
 
 const Dashboard: Component = () => {
+  const navigate = useNavigate()
+
+  createEffect(() => {
+    if (!localStorage.getItem('session')) {
+      navigate('/', { replace: true })
+    }
+  })
+
   return (
     <main class="container mx-auto px-ld-24 pt-ld-40 pb-24 relative max-w-2xl">
       <Logo variant="b2" class="mb-ld-40 text-center" />
