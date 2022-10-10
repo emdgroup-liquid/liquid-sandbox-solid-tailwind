@@ -1,7 +1,7 @@
-const liquidPreset = require('@emdgroup-liquid/liquid/dist/css/tailwind-preset.js')
+import liquidPreset from '@emdgroup-liquid/liquid/dist/css/tailwind-preset.js'
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   presets: [liquidPreset],
 }

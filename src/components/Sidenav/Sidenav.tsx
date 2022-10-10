@@ -1,11 +1,16 @@
 import { deleteSession } from '../../services/user'
 import Logo from '../Logo/Logo'
 import { useNavigate } from '@solidjs/router'
-import { Component, createSignal, Show } from 'solid-js'
+import { Component, createSignal, onCleanup, onMount, Show } from 'solid-js'
 
 const Sidenav: Component = () => {
   const navigate = useNavigate()
   const [loggingOut, setLoggingOut] = createSignal(false)
+
+  const maxWidthQuery = '(max-width: 37.5rem)'
+  const [isScreenNarrow, setIsScreenNarrow] = createSignal(
+    window.matchMedia(maxWidthQuery).matches
+  )
 
   const logout = async () => {
     setLoggingOut(true)
@@ -14,10 +19,22 @@ const Sidenav: Component = () => {
     navigate('/login', { replace: true })
   }
 
+  const onResize = () => {
+    setIsScreenNarrow(window.matchMedia(maxWidthQuery).matches)
+  }
+
+  onMount(async () => {
+    window.addEventListener('resize', onResize, { passive: true })
+  })
+
+  onCleanup(() => {
+    window.removeEventListener('resize', onResize)
+  })
+
   return (
     <>
       <ld-sidenav-toggle-outside class="z-10" />
-      <ld-sidenav open collapsible narrow class="z-10">
+      <ld-sidenav open collapsible={isScreenNarrow()} narrow class="z-10">
         <ld-sidenav-header href="/todo" slot="header">
           <Logo
             class="leading-7"

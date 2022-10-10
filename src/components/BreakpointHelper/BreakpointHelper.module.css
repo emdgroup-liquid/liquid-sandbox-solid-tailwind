@@ -1,0 +1,21 @@
+.BreakpointHelper {
+  z-index: 2147483647; /* Highest possible */
+  left: 0;
+  font-size: 9px;
+  right: 0;
+  height: 14px;
+  line-height: 14px;
+  position: fixed;
+  bottom: 0;
+  background-color: var(--ld-col-neutral);
+  color: var(--ld-col-neutral-100);
+}
+
+.Breakpoint {
+  height: 100%;
+  position: absolute;
+  text-align: right;
+  border-right: 1px solid;
+  padding-right: 4px;
+  border-right-color: var(--ld-thm-error);
+}

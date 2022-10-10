@@ -1,6 +1,7 @@
+import postcss from './postcss.config'
+import copy from 'rollup-plugin-copy'
 import { defineConfig } from 'vite'
 import solidPlugin from 'vite-plugin-solid'
-import copy from 'rollup-plugin-copy'
 
 export default defineConfig({
   plugins: [
@@ -20,5 +21,13 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
+  },
+  css: {
+    postcss,
+  },
+  resolve: {
+    alias: {
+      path: 'path-browserify',
+    },
   },
 })
