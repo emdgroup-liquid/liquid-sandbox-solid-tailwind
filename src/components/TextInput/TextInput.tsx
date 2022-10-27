@@ -40,6 +40,11 @@ const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
     setPasswordVisible(!passwordVisible())
   }
 
+  function capitalize(s: string) {
+    return s[0].toUpperCase() + s.slice(1)
+  }
+  const thisField = props.name ? capitalize(props.name) : 'This field'
+
   let inputRef: HTMLInputElement
   let inputWrapperRef: HTMLDivElement
 
@@ -135,12 +140,12 @@ const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
       </div>
       <Show when={props.control.isTouched && props.control.errors?.missing}>
         <ld-input-message mode="error">
-          {props.label} is required.
+          {thisField} is required.
         </ld-input-message>
       </Show>
       <Show when={props.control.isTouched && props.control.errors?.invalid}>
         <ld-input-message mode="error">
-          {props.label} is invalid.
+          {thisField} is invalid.
         </ld-input-message>
       </Show>
       <Show

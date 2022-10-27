@@ -1,5 +1,4 @@
 import TextInput from '../../components/TextInput/TextInput'
-import { createTodo } from '../../services/todo'
 import { createFormGroup, createFormControl } from 'solid-forms'
 import type { Component } from 'solid-js'
 import { JSX } from 'solid-js'
@@ -8,6 +7,7 @@ interface AddTodoProps {
   class?: string
   classList?: { [k: string]: boolean | undefined }
   style?: JSX.CSSProperties
+  createTodo: (todo: Omit<Todo, 'id' | 'createdAt'>) => Promise<void>
 }
 
 const AddTodo: Component<AddTodoProps> = (props) => {
@@ -45,7 +45,7 @@ const AddTodo: Component<AddTodoProps> = (props) => {
     const { task } = group.value
     let isTodoCreated = false
     try {
-      await createTodo({ description: task || '' })
+      await props.createTodo({ description: task || '' })
       isTodoCreated = true
       dispatchEvent(
         new CustomEvent('ldNotificationAdd', {
@@ -80,7 +80,7 @@ const AddTodo: Component<AddTodoProps> = (props) => {
       style={props.style}
     >
       <form
-        class="grid w-full grid-cols-2 gap-ld-16"
+        class="grid w-full grid-cols-2 gap-ld-12"
         noValidate
         onSubmit={onSubmit}
         ref={(el) => (formRef = el)}
@@ -90,7 +90,7 @@ const AddTodo: Component<AddTodoProps> = (props) => {
           control={group.controls.task}
           label="Add a task"
           class="col-span-2"
-          name="name"
+          name="description"
           // placeholder="Add a task"
           tone="dark"
           type="email"
@@ -116,11 +116,11 @@ const AddTodo: Component<AddTodoProps> = (props) => {
 
         <div class="col-start-2 flex">
           <ld-button
-            size="sm"
             class="ml-auto"
             mode="highlight"
             onClick={onSubmit}
             progress={group.isSubmitted ? 'pending' : undefined}
+            size="sm"
           >
             <span class="px-8">Add</span>
           </ld-button>
