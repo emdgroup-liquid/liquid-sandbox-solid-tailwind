@@ -1,0 +1,11 @@
+.todo-list-item {
+  transition: transform 0.25s ease, opacity 0.25s linear;
+}
+.todo-list-item-enter,
+.todo-list-item-exit-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+.todo-list-item-exit-active {
+  position: absolute;
+}

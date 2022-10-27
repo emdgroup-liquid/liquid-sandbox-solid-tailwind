@@ -13,7 +13,7 @@ export async function initStore() {
   }
 
   const todos = JSON.parse(localStorage.getItem(`todos_${email}`) || '[]')
-  setState(todos)
+  setState((t) => [...todos, ...t])
 }
 
 export async function createTodo(todo: Omit<Todo, 'id' | 'createdAt'>) {
@@ -30,13 +30,14 @@ export async function createTodo(todo: Omit<Todo, 'id' | 'createdAt'>) {
   const todos: Todo[] = JSON.parse(
     localStorage.getItem(`todos_${email}`) || '[]'
   )
-  todos.unshift({
+  const todoWithMeta = {
     ...todo,
     createdAt: new Date().toISOString(),
     id: new Date().toISOString(),
-  })
+  }
+  todos.unshift(todoWithMeta)
   localStorage.setItem(`todos_${email}`, JSON.stringify(todos))
-  setState(todos)
+  setState((t) => [todoWithMeta, ...t])
 }
 
 export async function deleteTodo(todoId: string) {
@@ -59,8 +60,10 @@ export async function deleteTodo(todoId: string) {
   )
   localStorage.setItem(`todos_${email}`, JSON.stringify(todos))
 
-  const idx = state.findIndex((todo) => todo.id === todoId)
-  setState([...state.slice(0, idx), ...state.slice(idx + 1)])
+  setState((t) => {
+    const idx = t.findIndex((todo) => todo.id === todoId)
+    return [...t.slice(0, idx), ...t.slice(idx + 1)]
+  })
 }
 
 export const todos = state

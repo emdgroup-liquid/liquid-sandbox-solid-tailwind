@@ -6,6 +6,7 @@ import { getSession } from '../../services/user'
 import { useNavigate } from '@solidjs/router'
 import type { Component } from 'solid-js'
 import { createEffect, createSignal, For, Show } from 'solid-js'
+import { TransitionGroup } from 'solid-transition-group'
 
 const Todo: Component = () => {
   const navigate = useNavigate()
@@ -51,16 +52,18 @@ const Todo: Component = () => {
             when={!loadingTodos()}
             fallback={<ld-loading class="mx-auto mt-ld-24" />}
           >
-            <ul>
-              <For each={todos}>
-                {(todo) => (
-                  <TodoListItem
-                    class="w-full mb-ld-12"
-                    deleteTodo={deleteTodo}
-                    todo={todo}
-                  />
-                )}
-              </For>
+            <ul class="relative">
+              <TransitionGroup name="todo-list-item">
+                <For each={todos}>
+                  {(todo) => (
+                    <TodoListItem
+                      class="w-full mb-ld-12 todo-list-item"
+                      deleteTodo={deleteTodo}
+                      todo={todo}
+                    />
+                  )}
+                </For>
+              </TransitionGroup>
             </ul>
           </Show>
         </Show>

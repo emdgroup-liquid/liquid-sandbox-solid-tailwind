@@ -35,6 +35,7 @@
     "@emdgroup-liquid/liquid": "^4.0.1",
     "@solidjs/router": "^0.4.3",
     "solid-forms": "^0.4.6",
-    "solid-js": "^1.5.1"
+    "solid-js": "^1.5.1",
+    "solid-transition-group": "^0.0.11"
   }
 }
