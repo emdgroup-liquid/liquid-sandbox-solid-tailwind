@@ -18,6 +18,7 @@ interface TextInputProps {
   label: string | JSX.Element
   name?: string
   placeholder?: string
+  size?: 'sm' | 'lg'
   type?: string
   tone?: 'dark'
   spellcheck?: boolean
@@ -52,6 +53,7 @@ const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
       <div
         class="ld-input"
         classList={{
+          ['ld-input--' + props.size]: !!props.size,
           'ld-input--dark': props.tone === 'dark',
           'ld-input--invalid':
             props.control.isTouched && !!props.control.errors,

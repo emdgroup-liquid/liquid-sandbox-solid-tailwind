@@ -7,7 +7,7 @@ import { createFormGroup, createFormControl } from 'solid-forms'
 import type { Component } from 'solid-js'
 import { createEffect, createSignal, Show } from 'solid-js'
 
-const Login: Component = () => {
+const Recover: Component = () => {
   const navigate = useNavigate()
   let formRef: HTMLFormElement
 
@@ -54,24 +54,10 @@ const Login: Component = () => {
 
     // Simulate asynchronous fetch.
     group.markSubmitted(true)
-    const { email } = group.value
     await new Promise((resolve) => setTimeout(resolve, 500))
     group.markSubmitted(false)
 
-    const isValidEmail = email === localStorage.getItem('user_email')
-
-    if (isValidEmail) {
-      setRecoveryPending(true)
-    } else {
-      dispatchEvent(
-        new CustomEvent('ldNotificationAdd', {
-          detail: {
-            content: 'An account with this email does not exist.',
-            type: 'alert',
-          },
-        })
-      )
-    }
+    setRecoveryPending(true)
   }
 
   return (
@@ -121,16 +107,17 @@ const Login: Component = () => {
                   </ld-typo>
 
                   <form
-                    class="grid w-full grid-cols-1 md:grid-cols-1 gap-ld-24 pb-ld-40"
+                    class="grid w-full grid-cols-1 gap-ld-24 pb-ld-40"
                     noValidate
                     onSubmit={onSubmit}
                     ref={(el) => (formRef = el)}
                   >
                     <TextInput
+                      autocomplete="email"
                       control={group.controls.email}
                       label="Account email"
                       name="name"
-                      placeholder="e.g. jason.parse@example.com"
+                      // placeholder="e.g. jason.parse@example.com"
                       tone="dark"
                       type="email"
                     />
@@ -140,7 +127,7 @@ const Login: Component = () => {
                       onClick={onSubmit}
                       progress={group.isSubmitted ? 'pending' : undefined}
                     >
-                      <span class="px-8">Send </span>
+                      <span class="px-8">Send</span>
                     </ld-button>
                   </form>
 
@@ -155,4 +142,4 @@ const Login: Component = () => {
   )
 }
 
-export default Login
+export default Recover

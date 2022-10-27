@@ -212,7 +212,7 @@ const SignUp: Component = () => {
 
                 <form
                   autocomplete="on"
-                  class="grid w-full grid-cols-1 md:grid-cols-1 gap-ld-24 pb-ld-40"
+                  class="grid w-full gap-ld-24 pb-ld-40"
                   novalidate
                   onSubmit={onSubmit}
                   ref={(el) => (formRef = el)}

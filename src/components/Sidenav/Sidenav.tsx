@@ -1,13 +1,21 @@
+import breakpoints from '../../breakpoints'
 import { deleteSession } from '../../services/user'
 import Logo from '../Logo/Logo'
 import { useNavigate } from '@solidjs/router'
 import { Component, createSignal, onCleanup, onMount, Show } from 'solid-js'
 
-const Sidenav: Component = () => {
+interface SidenavProps {
+  ref?: (el: HTMLLdSidenavElement) => void
+}
+
+const Sidenav: Component<SidenavProps> = (props) => {
+  let sidenavRef: HTMLLdSidenavElement
+
   const navigate = useNavigate()
   const [loggingOut, setLoggingOut] = createSignal(false)
 
-  const maxWidthQuery = '(max-width: 37.5rem)'
+  const maxWidthQuery = `(max-width: ${breakpoints.lg})`
+  const mediaQuery = window.matchMedia(maxWidthQuery)
   const [isScreenNarrow, setIsScreenNarrow] = createSignal(
     window.matchMedia(maxWidthQuery).matches
   )
@@ -19,22 +27,35 @@ const Sidenav: Component = () => {
     navigate('/login', { replace: true })
   }
 
-  const onResize = () => {
-    setIsScreenNarrow(window.matchMedia(maxWidthQuery).matches)
+  const onMediaQueryChange = () => {
+    const isNarrow = window.matchMedia(maxWidthQuery).matches
+    setIsScreenNarrow(isNarrow)
+    if (isNarrow) sidenavRef.collapsed = true
   }
 
   onMount(async () => {
-    window.addEventListener('resize', onResize, { passive: true })
+    mediaQuery.addEventListener('change', onMediaQueryChange, { passive: true })
   })
 
   onCleanup(() => {
-    window.removeEventListener('resize', onResize)
+    mediaQuery.removeEventListener('change', onMediaQueryChange)
   })
 
   return (
     <>
       <ld-sidenav-toggle-outside class="z-10" />
-      <ld-sidenav open collapsible={isScreenNarrow()} narrow class="z-10">
+      <ld-sidenav
+        breakpoint={breakpoints.xs}
+        ref={(el: HTMLLdSidenavElement) => {
+          sidenavRef = el
+          if (props.ref) props.ref(el)
+        }}
+        collapse-trigger="mouseout"
+        collapsed
+        collapsible={isScreenNarrow()}
+        narrow
+        class="z-10 lg:relative"
+      >
         <ld-sidenav-header href="/todo" slot="header">
           <Logo
             class="leading-7"
@@ -103,6 +124,7 @@ const Sidenav: Component = () => {
           Log out
         </ld-sidenav-navitem>
       </ld-sidenav>
+      <div class="hidden xs:block lg:hidden" style={{ width: '4rem' }} />
     </>
   )
 }
