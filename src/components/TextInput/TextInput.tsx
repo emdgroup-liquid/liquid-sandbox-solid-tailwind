@@ -17,12 +17,15 @@ interface TextInputProps {
   control?: IFormControl
   label: string | JSX.Element
   name?: string
+  ref?: (el: HTMLElement) => void
   placeholder?: string
   size?: 'sm' | 'lg'
   type?: string
   tone?: 'dark'
   spellcheck?: boolean
   successMessage?: string | JSX.Element
+  iconStart?: JSX.Element
+  iconEnd?: JSX.Element
 }
 
 const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
@@ -48,7 +51,7 @@ const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
   })
 
   return (
-    <ld-label class={props.class} classList={props.classList}>
+    <ld-label ref={props.ref} class={props.class} classList={props.classList}>
       {props.label}
       <div
         class="ld-input"
@@ -67,6 +70,7 @@ const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
         }}
         ref={(el) => (inputWrapperRef = el)}
       >
+        {props.iconStart}
         <input
           autocapitalize="off"
           autocomplete={props.autocomplete}
@@ -83,7 +87,7 @@ const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
           }
           value={props.control.value}
         />
-        {props.type === 'password' && (
+        {props.type === 'password' ? (
           <ld-button
             type="button"
             onClick={togglePasswordVisibility}
@@ -125,6 +129,8 @@ const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
               </svg>
             </ld-icon>
           </ld-button>
+        ) : (
+          props.iconEnd
         )}
       </div>
       <Show when={props.control.isTouched && props.control.errors?.missing}>

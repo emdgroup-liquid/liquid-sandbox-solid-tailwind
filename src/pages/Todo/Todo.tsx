@@ -1,11 +1,11 @@
-import AddToDo from '../../components/AddTodo/AddToDo'
+import AddTodo from '../../components/AddTodo/AddTodo'
 import Sidenav from '../../components/Sidenav/Sidenav'
 import { getSession } from '../../services/user'
 import { useNavigate } from '@solidjs/router'
 import type { Component } from 'solid-js'
 import { createEffect, createSignal, Show } from 'solid-js'
 
-const ToDo: Component = () => {
+const Todo: Component = () => {
   const navigate = useNavigate()
 
   const [loading, setLoading] = createSignal(true)
@@ -26,7 +26,7 @@ const ToDo: Component = () => {
   })
 
   return (
-    <div class="w-full min-h-screen relative flex">
+    <div class="w-full min-h-screen relative flex bg-neutral-010">
       <Sidenav />
       <main
         aria-busy={loading()}
@@ -35,10 +35,10 @@ const ToDo: Component = () => {
       >
         <Show when={!loading()} fallback={<ld-loading class="m-auto" />}>
           <>
-            <ld-typo variant="h2" tag="h1" class="mb-8">
+            <ld-typo variant="h2" tag="h1" class="mt-6 xs:mt-1 mb-6">
               Upcomming
             </ld-typo>
-            <AddToDo class="w-full" />
+            <AddTodo class="w-full" />
           </>
         </Show>
       </main>
@@ -46,4 +46,4 @@ const ToDo: Component = () => {
   )
 }
 
-export default ToDo
+export default Todo

@@ -1,6 +1,5 @@
-async function simulateFetch() {
-  await new Promise((resolve) => setTimeout(resolve, 250 + Math.random() * 250))
-}
+// **Warning** Do not use in production!
+import { simulateFetch } from './utils'
 
 export async function createUser(email: string, password: string) {
   await simulateFetch()
@@ -17,7 +16,7 @@ export async function loginUser(email = '', password = '') {
   await simulateFetch()
   const isLoginSuccessful = localStorage.getItem(`user_${email}`) === password
   if (isLoginSuccessful) {
-    localStorage.setItem('user_session', 'yes') // Fake session.
+    localStorage.setItem('user_session', email) // Fake session.
     return true
   }
   return false
@@ -29,7 +28,7 @@ export async function getSession() {
     await simulateFetch()
     firstTimeGetSession = false
   }
-  return !!localStorage.getItem('user_session')
+  return localStorage.getItem('user_session')
 }
 
 export async function deleteSession() {

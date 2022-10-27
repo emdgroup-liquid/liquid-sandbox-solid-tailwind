@@ -5,7 +5,7 @@ import Login from './pages/Login/Login'
 import Recover from './pages/Recover/Recover'
 import SignUp from './pages/SignUp/SignUp'
 import Terms from './pages/Terms/Terms'
-import ToDo from './pages/ToDo/ToDo'
+import Todo from './pages/Todo/Todo'
 import { Routes, Route } from '@solidjs/router'
 import type { Component } from 'solid-js'
 import { Show } from 'solid-js'
@@ -20,7 +20,7 @@ const App: Component = () => {
       <div class="relative flex items-center flex-grow">
         <Routes>
           <Route path="/" component={Home} />
-          <Route path="/todo" component={ToDo} />
+          <Route path="/todo" component={Todo} />
           <Route path="/login" component={Login} />
           <Route path="/recover" component={Recover} />
           <Route path="/signup" component={SignUp} />
