@@ -50,21 +50,31 @@ const Todo: Component = () => {
 
           <Show
             when={!loadingTodos()}
-            fallback={<ld-loading class="mx-auto mt-ld-24" />}
+            fallback={<ld-loading class="mx-auto mt-ld-32" />}
           >
-            <ul class="relative">
-              <TransitionGroup name="todo-list-item">
-                <For each={todos}>
-                  {(todo) => (
-                    <TodoListItem
-                      class="w-full mb-ld-12 todo-list-item"
-                      deleteTodo={deleteTodo}
-                      todo={todo}
-                    />
-                  )}
-                </For>
-              </TransitionGroup>
-            </ul>
+            <Show
+              when={todos.length}
+              fallback={
+                <ld-typo class="mx-auto mt-ld-32">
+                  Seems like there's nothing to do here.{' '}
+                  <ld-icon name="plant" class="transform translate-y-ld-4" />
+                </ld-typo>
+              }
+            >
+              <ul class="relative">
+                <TransitionGroup name="todo-list-item">
+                  <For each={todos}>
+                    {(todo) => (
+                      <TodoListItem
+                        class="w-full mb-ld-12 todo-list-item"
+                        deleteTodo={deleteTodo}
+                        todo={todo}
+                      />
+                    )}
+                  </For>
+                </TransitionGroup>
+              </ul>
+            </Show>
           </Show>
         </Show>
       </main>
