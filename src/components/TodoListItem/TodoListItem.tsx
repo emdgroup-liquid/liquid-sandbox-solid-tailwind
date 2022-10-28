@@ -1,6 +1,6 @@
 import './TodoListItem.css'
 import type { Component } from 'solid-js'
-import { createSignal, JSX } from 'solid-js'
+import { createSignal, JSX, onCleanup, onMount } from 'solid-js'
 
 interface AddTodoProps {
   class?: string
@@ -12,6 +12,7 @@ interface AddTodoProps {
 
 const TodoListItem: Component<AddTodoProps> = (props) => {
   let modalRef: HTMLLdModalElement
+  let checkBtnRef: HTMLLdCheckboxElement
   const [deleting, setDeleting] = createSignal(false)
 
   const deleteTodo = async () => {
@@ -42,6 +43,22 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
     }
     setDeleting(false)
   }
+
+  const onCheckClick = (ev: MouseEvent) => {
+    ev.stopImmediatePropagation()
+  }
+
+  onMount(() => {
+    checkBtnRef.addEventListener('click', onCheckClick, {
+      capture: true,
+    })
+  })
+
+  onCleanup(() => {
+    checkBtnRef.removeEventListener('click', onCheckClick, {
+      capture: true,
+    })
+  })
 
   const invokeDeletionConfirmationDialog = () => {
     if (deleting()) return
@@ -88,7 +105,16 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
       <ld-accordion rounded class="shadow-stacked rounded-l overflow-hidden">
         <ld-accordion-section>
           <ld-accordion-toggle>
-            <ld-typo>{props.todo.description}</ld-typo>
+            <div class="flex items-center">
+              <ld-label position="right">
+                <ld-sr-only>Done</ld-sr-only>
+                <ld-checkbox
+                  class="mr-ld-4"
+                  ref={(el: HTMLLdCheckboxElement) => (checkBtnRef = el)}
+                />
+              </ld-label>
+              <ld-typo>{props.todo.description}</ld-typo>
+            </div>
           </ld-accordion-toggle>
           <ld-accordion-panel>
             <div class="p-ld-16">
