@@ -1,7 +1,13 @@
 import AddTodo from '../../components/AddTodo/AddTodo'
 import Sidenav from '../../components/Sidenav/Sidenav'
 import TodoListItem from '../../components/TodoListItem/TodoListItem'
-import { createTodo, deleteTodo, initStore, todos } from '../../services/todo'
+import {
+  createTodo,
+  deleteTodo,
+  initStore,
+  todos,
+  updateTodo,
+} from '../../services/todo'
 import { getSession } from '../../services/user'
 import { useNavigate } from '@solidjs/router'
 import type { Component } from 'solid-js'
@@ -68,6 +74,7 @@ const Todo: Component = () => {
                       <TodoListItem
                         class="w-full mb-ld-12 todo-list-item"
                         deleteTodo={deleteTodo}
+                        updateTodo={updateTodo}
                         todo={todo}
                       />
                     )}

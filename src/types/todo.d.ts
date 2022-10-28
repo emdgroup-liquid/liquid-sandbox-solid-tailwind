@@ -3,4 +3,5 @@ interface Todo {
   done?: boolean
   id: string
   createdAt: string
+  dueAt?: string
 }

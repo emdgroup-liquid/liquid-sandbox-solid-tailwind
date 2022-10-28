@@ -8,20 +8,21 @@ interface AddTodoProps {
   style?: JSX.CSSProperties
   todo: Todo
   deleteTodo: (todoId: string) => Promise<void>
+  updateTodo: (todo: Omit<Todo, 'createdAt'>) => Promise<void>
 }
 
 const TodoListItem: Component<AddTodoProps> = (props) => {
-  let modalRef: HTMLLdModalElement
   let checkLabelRef: HTMLLabelElement
   let checkRef: HTMLLdCheckboxElement
-  const [deleting, setDeleting] = createSignal(false)
+  let modalRef: HTMLLdModalElement
+  const [updating, setUpdating] = createSignal(false)
 
   const deleteTodo = async () => {
-    if (deleting()) return
+    if (updating()) return
 
     dispatchEvent(new CustomEvent('ldNotificationClear'))
 
-    setDeleting(true)
+    setUpdating(true)
     try {
       await props.deleteTodo(props.todo.id)
       dispatchEvent(
@@ -42,7 +43,39 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
         })
       )
     }
-    setDeleting(false)
+    setUpdating(false)
+  }
+
+  const updateTodo = async (todo: Omit<Todo, 'createdAt'>) => {
+    if (updating()) return
+
+    dispatchEvent(new CustomEvent('ldNotificationClear'))
+
+    setUpdating(true)
+    try {
+      await props.updateTodo({
+        ...todo,
+        id: props.todo.id,
+      })
+      dispatchEvent(
+        new CustomEvent('ldNotificationAdd', {
+          detail: {
+            content: 'Task has been updated.',
+            type: 'info',
+          },
+        })
+      )
+    } catch (err) {
+      dispatchEvent(
+        new CustomEvent('ldNotificationAdd', {
+          detail: {
+            content: (err as Error)?.message || 'Failed updating task.',
+            type: 'alert',
+          },
+        })
+      )
+    }
+    setUpdating(false)
   }
 
   const onCheckClick = (ev: MouseEvent) => {
@@ -65,7 +98,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
   })
 
   const invokeDeletionConfirmationDialog = () => {
-    if (deleting()) return
+    if (updating()) return
 
     dispatchEvent(new CustomEvent('ldNotificationClear'))
     modalRef.showModal()
@@ -99,7 +132,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
             await deleteTodo()
             modalRef.close()
           }}
-          progress={deleting() ? 'pending' : undefined}
+          progress={updating() ? 'pending' : undefined}
           slot="footer"
           style="width: 8rem"
         >
@@ -123,8 +156,50 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
             </div>
           </ld-accordion-toggle>
           <ld-accordion-panel>
-            <div class="p-ld-16">
-              <div class="col-start-2 flex">
+            <div class="p-ld-16 grid gap-ld-16">
+              <ld-label>
+                Description
+                <ld-input
+                  onBlur={(ev) => {
+                    const ldInput = ev.target as HTMLLdInputElement
+                    const inputValue = ldInput.value
+                    if (!inputValue || inputValue === props.todo.description) {
+                      ldInput.value = props.todo.description
+                      return
+                    }
+                    updateTodo({ ...props.todo, description: inputValue })
+                  }}
+                  value={props.todo.description}
+                ></ld-input>
+              </ld-label>
+              <ld-label>
+                Due date
+                <ld-input
+                  onBlur={(ev) => {
+                    const ldInput = ev.target as HTMLLdInputElement
+                    const inputValue = ldInput.value
+                    const isInputValid =
+                      typeof inputValue !== 'string' ||
+                      !isNaN(Date.parse(inputValue))
+                    let dueAt: string | undefined
+                    if (!isInputValid) {
+                      ldInput.value = undefined
+                    } else {
+                      dueAt = new Date(inputValue as string).toISOString()
+                    }
+                    if (dueAt === props.todo.dueAt) {
+                      return
+                    }
+                    updateTodo({
+                      ...props.todo,
+                      dueAt,
+                    })
+                  }}
+                  type="date"
+                  value={props.todo.dueAt?.split('T')[0]}
+                ></ld-input>
+              </ld-label>
+              <div class="flex">
                 <ld-button
                   class="ml-auto"
                   mode="danger-secondary"

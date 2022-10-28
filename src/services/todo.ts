@@ -12,8 +12,7 @@ export async function initStore() {
     throw new Error('No session.')
   }
 
-  const todos = JSON.parse(localStorage.getItem(`todos_${email}`) || '[]')
-  setState((t) => [...todos, ...t])
+  setState(JSON.parse(localStorage.getItem(`todos_${email}`) || '[]'))
 }
 
 export async function createTodo(todo: Omit<Todo, 'id' | 'createdAt'>) {
@@ -21,10 +20,6 @@ export async function createTodo(todo: Omit<Todo, 'id' | 'createdAt'>) {
   const email = await getSession()
   if (!email) {
     throw new Error('No session.')
-  }
-
-  if (!todo.description) {
-    throw new Error('No payload.')
   }
 
   const todos: Todo[] = JSON.parse(
@@ -37,6 +32,7 @@ export async function createTodo(todo: Omit<Todo, 'id' | 'createdAt'>) {
   }
   todos.unshift(todoWithMeta)
   localStorage.setItem(`todos_${email}`, JSON.stringify(todos))
+
   setState((t) => [todoWithMeta, ...t])
 }
 
@@ -47,23 +43,34 @@ export async function deleteTodo(todoId: string) {
     throw new Error('No session.')
   }
 
-  if (!todoId) {
-    throw new Error('No payload.')
+  const todos: Todo[] = JSON.parse(
+    localStorage.getItem(`todos_${email}`) || '[]'
+  )
+  const idx = todos.findIndex((t) => t.id === todoId)
+  todos.splice(idx, 1)
+  localStorage.setItem(`todos_${email}`, JSON.stringify(todos))
+
+  setState((t) => {
+    return [...t.slice(0, idx), ...t.slice(idx + 1)]
+  })
+}
+
+export async function updateTodo(todo: Omit<Todo, 'createdAt'>) {
+  await simulateFetch()
+  const email = await getSession()
+  if (!email) {
+    throw new Error('No session.')
   }
 
   const todos: Todo[] = JSON.parse(
     localStorage.getItem(`todos_${email}`) || '[]'
   )
-  todos.splice(
-    todos.findIndex((todo) => todo.id === todoId),
-    1
-  )
+  const idx = todos.findIndex((t) => t.id === todo.id)
+  const updatedTodo = { ...todos[idx], ...todo }
+  todos[idx] = updatedTodo
   localStorage.setItem(`todos_${email}`, JSON.stringify(todos))
 
-  setState((t) => {
-    const idx = t.findIndex((todo) => todo.id === todoId)
-    return [...t.slice(0, idx), ...t.slice(idx + 1)]
-  })
+  setState(idx, { ...updatedTodo })
 }
 
 export const todos = state
