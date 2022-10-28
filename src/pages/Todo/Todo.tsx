@@ -44,7 +44,7 @@ const Todo: Component = () => {
       <main
         aria-busy={loading()}
         aria-live="polite"
-        class="flex flex-col px-ld-24 py-ld-40 relative min-h-screen flex-grow"
+        class="flex flex-col px-ld-24 py-ld-40 relative h-screen flex-grow overflow-auto"
       >
         <Show when={!loading()} fallback={<ld-loading class="m-auto" />}>
           <>
