@@ -12,7 +12,8 @@ interface AddTodoProps {
 
 const TodoListItem: Component<AddTodoProps> = (props) => {
   let modalRef: HTMLLdModalElement
-  let checkBtnRef: HTMLLdCheckboxElement
+  let checkLabelRef: HTMLLabelElement
+  let checkRef: HTMLLdCheckboxElement
   const [deleting, setDeleting] = createSignal(false)
 
   const deleteTodo = async () => {
@@ -45,17 +46,20 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
   }
 
   const onCheckClick = (ev: MouseEvent) => {
-    ev.stopImmediatePropagation()
+    ev.stopPropagation()
+    if ((ev.target as HTMLElement).tagName === 'LABEL') {
+      checkRef.checked = !checkRef.checked
+    }
   }
 
   onMount(() => {
-    checkBtnRef.addEventListener('click', onCheckClick, {
+    checkLabelRef.addEventListener('click', onCheckClick, {
       capture: true,
     })
   })
 
   onCleanup(() => {
-    checkBtnRef.removeEventListener('click', onCheckClick, {
+    checkLabelRef.removeEventListener('click', onCheckClick, {
       capture: true,
     })
   })
@@ -106,13 +110,15 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
         <ld-accordion-section>
           <ld-accordion-toggle>
             <div class="flex items-center">
-              <ld-label position="right">
-                <ld-sr-only>Done</ld-sr-only>
+              <label
+                ref={(el) => (checkLabelRef = el)}
+                class="cursor-pointer p-ld-12 mr-ld-2 -ml-ld-12 -my-ld-4 flex"
+              >
+                <ld-sr-only class="absolute">Done</ld-sr-only>
                 <ld-checkbox
-                  class="mr-ld-4"
-                  ref={(el: HTMLLdCheckboxElement) => (checkBtnRef = el)}
+                  ref={(el: HTMLLdCheckboxElement) => (checkRef = el)}
                 />
-              </ld-label>
+              </label>
               <ld-typo>{props.todo.description}</ld-typo>
             </div>
           </ld-accordion-toggle>
