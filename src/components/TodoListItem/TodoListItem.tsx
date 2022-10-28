@@ -11,10 +11,10 @@ interface AddTodoProps {
 }
 
 const TodoListItem: Component<AddTodoProps> = (props) => {
+  let modalRef: HTMLLdModalElement
   const [deleting, setDeleting] = createSignal(false)
 
-  const onDelete = async (ev: Event) => {
-    ev.preventDefault()
+  const deleteTodo = async () => {
     if (deleting()) return
 
     dispatchEvent(new CustomEvent('ldNotificationClear'))
@@ -43,30 +43,74 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
     setDeleting(false)
   }
 
+  const invokeDeletionConfirmationDialog = () => {
+    if (deleting()) return
+
+    dispatchEvent(new CustomEvent('ldNotificationClear'))
+    modalRef.showModal()
+  }
+
   return (
-    <ld-card
+    <li
       class={props.class}
       classList={props.classList}
       role="listitem"
-      size="sm"
       style={props.style}
     >
-      <div class="grid w-full grid-cols-2 gap-ld-12">
-        <ld-typo>{props.todo.description}</ld-typo>
-
-        <div class="col-start-2 flex">
-          <ld-button
-            class="ml-auto"
-            mode="danger-secondary"
-            onClick={onDelete}
-            progress={deleting() ? 'pending' : undefined}
-            size="sm"
-          >
-            <ld-icon name="bin" size="sm" aria-label="Delete task"></ld-icon>
-          </ld-button>
-        </div>
-      </div>
-    </ld-card>
+      <ld-modal ref={(el: HTMLLdModalElement) => (modalRef = el)}>
+        <ld-typo slot="header">Are you sure?</ld-typo>
+        <ld-typo style="text-align: center">
+          You won't be able to undo this action.
+        </ld-typo>
+        <ld-button
+          slot="footer"
+          style="width: 8rem"
+          mode="ghost"
+          onClick={() => {
+            modalRef.close()
+          }}
+        >
+          Cancel
+        </ld-button>
+        <ld-button
+          mode="danger"
+          onClick={async () => {
+            await deleteTodo()
+            modalRef.close()
+          }}
+          progress={deleting() ? 'pending' : undefined}
+          slot="footer"
+          style="width: 8rem"
+        >
+          Delete task
+        </ld-button>
+      </ld-modal>
+      <ld-accordion rounded class="shadow-stacked rounded-l overflow-hidden">
+        <ld-accordion-section>
+          <ld-accordion-toggle>
+            <ld-typo>{props.todo.description}</ld-typo>
+          </ld-accordion-toggle>
+          <ld-accordion-panel>
+            <div class="p-ld-16">
+              <div class="col-start-2 flex">
+                <ld-button
+                  class="ml-auto"
+                  mode="danger-secondary"
+                  onClick={invokeDeletionConfirmationDialog}
+                  size="sm"
+                >
+                  <ld-icon
+                    name="bin"
+                    size="sm"
+                    aria-label="Delete task"
+                  ></ld-icon>
+                </ld-button>
+              </div>
+            </div>
+          </ld-accordion-panel>
+        </ld-accordion-section>
+      </ld-accordion>
+    </li>
   )
 }
 

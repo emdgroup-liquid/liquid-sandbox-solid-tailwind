@@ -1,9 +1,14 @@
+.todo-list-item ld-accordion {
+  --ld-accordion-padding-x: var(--ld-sp-16);
+}
 .todo-list-item {
   transition: transform 0.25s ease, opacity 0.25s linear;
 }
 .todo-list-item-enter,
 .todo-list-item-exit-to {
   opacity: 0;
+}
+.todo-list-item-enter {
   transform: scale(0.9);
 }
 .todo-list-item-exit-active {
