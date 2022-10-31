@@ -47,10 +47,6 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
   }
 
   const updateTodo = async (todo: Omit<Todo, 'createdAt'>) => {
-    if (updating()) return
-
-    dispatchEvent(new CustomEvent('ldNotificationClear'))
-
     setUpdating(true)
     try {
       await props.updateTodo({
@@ -150,6 +146,11 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
                 <ld-sr-only class="absolute">Done</ld-sr-only>
                 <ld-checkbox
                   ref={(el: HTMLLdCheckboxElement) => (checkRef = el)}
+                  onLdchange={(ev) => {
+                    const ldCheckbox = ev.target as HTMLLdCheckboxElement
+                    updateTodo({ ...props.todo, done: !ldCheckbox.checked })
+                  }}
+                  checked={props.todo.done}
                 />
               </label>
               <ld-typo>{props.todo.description}</ld-typo>
@@ -160,6 +161,8 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
               <ld-label>
                 Description
                 <ld-input
+                  multiline
+                  rows={4}
                   onBlur={(ev) => {
                     const ldInput = ev.target as HTMLLdInputElement
                     const inputValue = ldInput.value
@@ -179,13 +182,13 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
                     const ldInput = ev.target as HTMLLdInputElement
                     const inputValue = ldInput.value
                     const isInputValid =
-                      typeof inputValue !== 'string' ||
-                      !isNaN(Date.parse(inputValue))
+                      inputValue !== undefined &&
+                      !isNaN(Date.parse(inputValue || ''))
                     let dueAt: string | undefined
                     if (!isInputValid) {
                       ldInput.value = undefined
                     } else {
-                      dueAt = new Date(inputValue as string).toISOString()
+                      dueAt = new Date(inputValue).toISOString()
                     }
                     if (dueAt === props.todo.dueAt) {
                       return

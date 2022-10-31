@@ -6,7 +6,12 @@ import { Component, createSignal, onCleanup, onMount, Show } from 'solid-js'
 
 interface SidenavProps {
   ref?: (el: HTMLLdSidenavElement) => void
-  todos: Todo[]
+  todos: {
+    all: Todo[]
+    upcomming: Todo[]
+    done: Todo[]
+    dueToday: Todo[]
+  }
 }
 
 const Sidenav: Component<SidenavProps> = (props) => {
@@ -33,9 +38,6 @@ const Sidenav: Component<SidenavProps> = (props) => {
     setIsScreenNarrow(isNarrow)
     if (isNarrow) sidenavRef.collapsed = true
   }
-
-  const upcomming = () => props.todos.filter((todo) => !todo.done)
-  const done = () => props.todos.filter((todo) => todo.done)
 
   onMount(async () => {
     mediaQuery.addEventListener('change', onMediaQueryChange, { passive: true })
@@ -73,20 +75,25 @@ const Sidenav: Component<SidenavProps> = (props) => {
           <ld-sidenav-heading>Your tasks</ld-sidenav-heading>
           <ld-sidenav-navitem rounded selected={true}>
             <ld-icon slot="icon" name="calendar" /> Upcomming{' '}
-            <Show when={!!upcomming().length}>
+            <Show when={!!props.todos.upcomming.length}>
               <ld-badge class="ml-ld-4 origin-left scale-75 -translate-y-px text-vc-100 -my-ld-4">
-                {upcomming().length} <ld-sr-only>total</ld-sr-only>
+                {props.todos.upcomming.length} <ld-sr-only>total</ld-sr-only>
               </ld-badge>
             </Show>
           </ld-sidenav-navitem>
           <ld-sidenav-navitem rounded>
             <ld-icon slot="icon" name="attention" /> Due today
+            <Show when={!!props.todos.dueToday.length}>
+              <ld-badge class="ml-ld-4 origin-left scale-75 -translate-y-px text-vc-100 -my-ld-4">
+                {props.todos.dueToday.length} <ld-sr-only>total</ld-sr-only>
+              </ld-badge>
+            </Show>
           </ld-sidenav-navitem>
           <ld-sidenav-navitem rounded>
             <ld-icon slot="icon" name="checkmark" /> Done{' '}
-            <Show when={!!done().length}>
+            <Show when={!!props.todos.done.length}>
               <ld-badge class="ml-ld-4 origin-left scale-75 -translate-y-px text-vc-100 -my-ld-4">
-                {done().length} <ld-sr-only>done</ld-sr-only>
+                {props.todos.done.length} <ld-sr-only>done</ld-sr-only>
               </ld-badge>
             </Show>
           </ld-sidenav-navitem>

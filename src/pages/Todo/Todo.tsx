@@ -11,10 +11,18 @@ import {
 import { getSession } from '../../services/user'
 import { useNavigate } from '@solidjs/router'
 import type { Component } from 'solid-js'
-import { createEffect, createSignal, For, Show } from 'solid-js'
+import {
+  createEffect,
+  createSignal,
+  For,
+  onCleanup,
+  onMount,
+  Show,
+} from 'solid-js'
 import { TransitionGroup } from 'solid-transition-group'
 
 const Todo: Component = () => {
+  let mainRef: HTMLElement
   const navigate = useNavigate()
 
   const [loading, setLoading] = createSignal(true)
@@ -38,6 +46,21 @@ const Todo: Component = () => {
     setLoading(false)
   })
 
+  const onAccordionChange = (ev: Event) => {
+    // TODO: collapse siblings.
+    console.info('onAccordionChange', ev)
+  }
+
+  onMount(async () => {
+    mainRef.addEventListener('ldaccordionchange', onAccordionChange, {
+      passive: true,
+    })
+  })
+
+  onCleanup(() => {
+    mainRef.removeEventListener('ldaccordionchange', onAccordionChange)
+  })
+
   return (
     <div class="w-full min-h-screen relative flex bg-neutral-010">
       <Sidenav todos={todos} />
@@ -45,6 +68,7 @@ const Todo: Component = () => {
         aria-busy={loading()}
         aria-live="polite"
         class="flex flex-col px-ld-24 py-ld-40 relative h-screen flex-grow overflow-auto"
+        ref={(el) => (mainRef = el)}
       >
         <Show when={!loading()} fallback={<ld-loading class="m-auto" />}>
           <>
@@ -59,7 +83,7 @@ const Todo: Component = () => {
             fallback={<ld-loading class="mx-auto mt-ld-32" />}
           >
             <Show
-              when={todos.length}
+              when={todos.all.length}
               fallback={
                 <ld-typo class="mx-auto mt-ld-32">
                   Seems like there's nothing to do here.{' '}
@@ -69,7 +93,7 @@ const Todo: Component = () => {
             >
               <ul class="relative">
                 <TransitionGroup name="todo-list-item">
-                  <For each={todos}>
+                  <For each={todos.all}>
                     {(todo) => (
                       <TodoListItem
                         class="w-full mb-ld-12 todo-list-item"

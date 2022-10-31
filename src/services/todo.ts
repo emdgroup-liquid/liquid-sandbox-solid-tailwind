@@ -3,7 +3,25 @@ import { getSession } from './user'
 import { simulateFetch } from './utils'
 import { createStore } from 'solid-js/store'
 
-const [state, setState] = createStore([] as Todo[])
+const [state, setState] = createStore({
+  all: [] as Todo[],
+  get upcomming() {
+    return this.all.filter((todo) => !todo.done)
+  },
+  get done() {
+    return this.all.filter((todo) => todo.done)
+  },
+  get dueToday() {
+    return this.all.filter((todo) => {
+      if (todo.done || typeof todo.dueAt !== 'string') return false
+      const delta =
+        (Date.parse(todo.dueAt) -
+          Date.parse(new Date().toISOString().split('T')[0])) /
+        (1000 * 60 * 60 * 24)
+      return delta <= 0
+    })
+  },
+})
 
 export async function initStore() {
   await simulateFetch()
@@ -12,7 +30,7 @@ export async function initStore() {
     throw new Error('No session.')
   }
 
-  setState(JSON.parse(localStorage.getItem(`todos_${email}`) || '[]'))
+  setState('all', JSON.parse(localStorage.getItem(`todos_${email}`) || '[]'))
 }
 
 export async function createTodo(todo: Omit<Todo, 'id' | 'createdAt'>) {
@@ -33,7 +51,7 @@ export async function createTodo(todo: Omit<Todo, 'id' | 'createdAt'>) {
   todos.unshift(todoWithMeta)
   localStorage.setItem(`todos_${email}`, JSON.stringify(todos))
 
-  setState((t) => [todoWithMeta, ...t])
+  setState('all', (t) => [todoWithMeta, ...t])
 }
 
 export async function deleteTodo(todoId: string) {
@@ -50,7 +68,7 @@ export async function deleteTodo(todoId: string) {
   todos.splice(idx, 1)
   localStorage.setItem(`todos_${email}`, JSON.stringify(todos))
 
-  setState((t) => {
+  setState('all', (t) => {
     return [...t.slice(0, idx), ...t.slice(idx + 1)]
   })
 }
@@ -70,7 +88,7 @@ export async function updateTodo(todo: Omit<Todo, 'createdAt'>) {
   todos[idx] = updatedTodo
   localStorage.setItem(`todos_${email}`, JSON.stringify(todos))
 
-  setState(idx, { ...updatedTodo })
+  setState('all', idx, { ...updatedTodo })
 }
 
 export const todos = state
