@@ -46,19 +46,23 @@ const Todo: Component = () => {
     setLoading(false)
   })
 
-  const onAccordionChange = (ev: Event) => {
-    // TODO: collapse siblings.
-    console.info('onAccordionChange', ev)
+  const collapseSiblings = (ev: Event) => {
+    if (!(ev.target as HTMLLdAccordionSectionElement).expanded) return
+    mainRef.querySelectorAll('ld-accordion-section').forEach((section) => {
+      if (section !== ev.target) {
+        section.expanded = false
+      }
+    })
   }
 
   onMount(async () => {
-    mainRef.addEventListener('ldaccordionchange', onAccordionChange, {
+    mainRef.addEventListener('ldaccordionchange', collapseSiblings, {
       passive: true,
     })
   })
 
   onCleanup(() => {
-    mainRef.removeEventListener('ldaccordionchange', onAccordionChange)
+    mainRef.removeEventListener('ldaccordionchange', collapseSiblings)
   })
 
   return (
