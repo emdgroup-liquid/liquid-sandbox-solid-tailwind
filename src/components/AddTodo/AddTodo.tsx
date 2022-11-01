@@ -91,7 +91,6 @@ const AddTodo: Component<AddTodoProps> = (props) => {
           label="Add a task"
           class="col-span-2"
           name="description"
-          // placeholder="Add a task"
           tone="dark"
           type="email"
           iconStart={

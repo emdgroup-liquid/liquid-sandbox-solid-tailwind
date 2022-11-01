@@ -1,6 +1,13 @@
 import './TodoListItem.css'
 import type { Component } from 'solid-js'
-import { createSignal, JSX, onCleanup, onMount } from 'solid-js'
+import {
+  createMemo,
+  createSignal,
+  For,
+  type JSX,
+  onCleanup,
+  onMount,
+} from 'solid-js'
 
 interface AddTodoProps {
   class?: string
@@ -14,8 +21,72 @@ interface AddTodoProps {
 const TodoListItem: Component<AddTodoProps> = (props) => {
   let checkLabelRef: HTMLLabelElement
   let checkRef: HTMLLdCheckboxElement
-  let modalRef: HTMLLdModalElement
+  let confirmDeleteModalRef: HTMLLdModalElement
+  let setCustomReminderModalRef: HTMLLdModalElement
   const [updating, setUpdating] = createSignal(false)
+
+  const isLaterToday = createMemo(() => {
+    return new Date().getHours() >= 16
+  })
+
+  const tomorrow = createMemo(() => {
+    return (
+      'Tomorrow (' +
+      new Intl.DateTimeFormat('en', { weekday: 'short' }).format(
+        new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+      ) +
+      ', 9 AM)'
+    )
+  })
+
+  const nextWeek = createMemo(() => {
+    return (
+      'Next week (' +
+      new Intl.DateTimeFormat('en', { weekday: 'short' }).format(
+        new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)
+      ) +
+      ', 9 AM)'
+    )
+  })
+
+  const [reminderOptions, setReminderOptions] = createSignal([
+    ...(isLaterToday()
+      ? []
+      : [
+          {
+            value: 'later-today',
+            selected: false,
+          },
+        ]),
+    {
+      value: 'tomorrow',
+      selected: false,
+    },
+    {
+      value: 'next-week',
+      selected: false,
+    },
+    {
+      value: 'custom',
+      selected: false,
+    },
+  ])
+
+  const reminderTextFrom = (optionValue: string) => {
+    switch (optionValue) {
+      case 'later-today':
+        return 'Later today (4:00 PM)'
+      case 'tomorrow':
+        return tomorrow()
+      case 'next-week':
+        return nextWeek()
+      case 'custom':
+        return 'Custom...'
+      default:
+        // TODO: parse custom value
+        return 'Custom value'
+    }
+  }
 
   const deleteTodo = async () => {
     if (updating()) return
@@ -97,7 +168,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
     if (updating()) return
 
     dispatchEvent(new CustomEvent('ldNotificationClear'))
-    modalRef.showModal()
+    confirmDeleteModalRef.showModal()
   }
 
   return (
@@ -107,9 +178,12 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
       role="listitem"
       style={props.style}
     >
-      <ld-modal ref={(el: HTMLLdModalElement) => (modalRef = el)}>
+      <ld-modal
+        class="[&::part(footer)]:grid-cols-1"
+        ref={(el: HTMLLdModalElement) => (confirmDeleteModalRef = el)}
+      >
         <ld-typo slot="header">Are you sure?</ld-typo>
-        <ld-typo style="text-align: center">
+        <ld-typo class="text-center">
           You won't be able to undo this action.
         </ld-typo>
         <ld-button
@@ -117,7 +191,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
           style="width: 8rem"
           mode="ghost"
           onClick={() => {
-            modalRef.close()
+            confirmDeleteModalRef.close()
           }}
         >
           Cancel
@@ -126,7 +200,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
           mode="danger"
           onClick={async () => {
             await deleteTodo()
-            modalRef.close()
+            confirmDeleteModalRef.close()
           }}
           progress={updating() ? 'pending' : undefined}
           slot="footer"
@@ -134,6 +208,46 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
         >
           Delete task
         </ld-button>
+      </ld-modal>
+      <ld-modal
+        onLdmodalclosing={() => {
+          setReminderOptions((s) =>
+            s.map((r) => ({
+              ...r,
+              selected: r.value === 'custom' ? false : r.selected,
+            }))
+          )
+        }}
+        class="[&::part(footer)]:grid-cols-1"
+        ref={(el: HTMLLdModalElement) => (setCustomReminderModalRef = el)}
+      >
+        <ld-typo slot="header">When do you want to be reminded?</ld-typo>
+        <div class="grid grid-cols-2 gap-ld-12">
+          <ld-input type="date" tone="dark" />
+          <ld-input type="time" tone="dark" />
+        </div>
+        <div slot="footer" class="grid grid-cols-2 gap-ld-12 w-full">
+          <ld-button
+            class=""
+            mode="ghost"
+            onClick={() => {
+              setCustomReminderModalRef.close()
+            }}
+          >
+            Cancel
+          </ld-button>
+          <ld-button
+            class=""
+            onClick={async () => {
+              // TODO: save custom reminder
+              // await updateTodo()
+              setCustomReminderModalRef.close()
+            }}
+            progress={updating() ? 'pending' : undefined}
+          >
+            Set reminder
+          </ld-button>
+        </div>
       </ld-modal>
       <ld-accordion rounded class="shadow-stacked rounded-l overflow-hidden">
         <ld-accordion-section>
@@ -172,6 +286,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
                     }
                     updateTodo({ ...props.todo, description: inputValue })
                   }}
+                  tone="dark"
                   value={props.todo.description}
                 ></ld-input>
               </ld-label>
@@ -198,22 +313,68 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
                       dueAt,
                     })
                   }}
+                  tone="dark"
                   type="date"
                   value={props.todo.dueAt?.split('T')[0]}
-                ></ld-input>
+                />
               </ld-label>
+
+              <ld-label>
+                Remind me
+                <ld-select
+                  onLdchange={(ev) => {
+                    const compareBefore = JSON.stringify(
+                      reminderOptions()
+                        .filter((o) => o.selected)
+                        .map((o) => o.value)
+                        .sort()
+                    )
+                    setReminderOptions((s) =>
+                      s.map((r) => ({
+                        ...r,
+                        selected: ev.detail.includes(r.value),
+                      }))
+                    )
+                    if (ev.detail.includes('custom')) {
+                      setCustomReminderModalRef.showModal()
+                    } else {
+                      // prevent update on modal cancel
+                      const needsUpdate =
+                        compareBefore !== JSON.stringify(ev.detail.sort())
+                      if (needsUpdate) {
+                        updateTodo({
+                          ...props.todo,
+                          reminders: reminderOptions()
+                            .filter((option) => option.selected)
+                            .map((r) => r.value),
+                        })
+                      }
+                    }
+                  }}
+                  placeholder="No reminders"
+                  multiple
+                >
+                  <For each={reminderOptions()}>
+                    {(option) => (
+                      <ld-option
+                        value={option.value}
+                        selected={option.selected}
+                      >
+                        {reminderTextFrom(option.value)}
+                      </ld-option>
+                    )}
+                  </For>
+                </ld-select>
+              </ld-label>
+
               <div class="flex">
                 <ld-button
-                  class="ml-auto"
-                  mode="danger-secondary"
+                  class="mr-auto mt-ld-8"
+                  mode="danger"
                   onClick={invokeDeletionConfirmationDialog}
                   size="sm"
                 >
-                  <ld-icon
-                    name="bin"
-                    size="sm"
-                    aria-label="Delete task"
-                  ></ld-icon>
+                  Delete task
                 </ld-button>
               </div>
             </div>

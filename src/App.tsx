@@ -20,7 +20,11 @@ const App: Component = () => {
       <div class="relative flex items-center flex-grow">
         <Routes>
           <Route path="/" component={Home} />
-          <Route path="/todo" component={Todo} />
+          <Route path="/todo">
+            <Route path="/" component={Todo} />
+            <Route path="/due-today" component={Todo} />
+            <Route path="/done" component={Todo} />
+          </Route>
           <Route path="/login" component={Login} />
           <Route path="/recover" component={Recover} />
           <Route path="/signup" component={SignUp} />

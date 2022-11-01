@@ -3,6 +3,7 @@ import { deleteSession } from '../../services/user'
 import Logo from '../Logo/Logo'
 import { useNavigate } from '@solidjs/router'
 import { Component, createSignal, onCleanup, onMount, Show } from 'solid-js'
+import type { Accessor } from 'solid-js'
 
 interface SidenavProps {
   ref?: (el: HTMLLdSidenavElement) => void
@@ -12,6 +13,7 @@ interface SidenavProps {
     done: Todo[]
     dueToday: Todo[]
   }
+  pathname: Accessor<string>
 }
 
 const Sidenav: Component<SidenavProps> = (props) => {
@@ -73,7 +75,13 @@ const Sidenav: Component<SidenavProps> = (props) => {
         </ld-sidenav-header>
         <ld-sidenav-slider label="To-Do">
           <ld-sidenav-heading>Your tasks</ld-sidenav-heading>
-          <ld-sidenav-navitem rounded selected={true}>
+          <ld-sidenav-navitem
+            onClick={() => {
+              navigate('/todo')
+            }}
+            rounded
+            selected={props.pathname() === '/todo'}
+          >
             <ld-icon slot="icon" name="calendar" /> Upcomming{' '}
             <Show when={!!props.todos.upcomming.length}>
               <ld-badge class="ml-ld-4 origin-left scale-75 -translate-y-px text-vc-100 -my-ld-4">
@@ -81,7 +89,13 @@ const Sidenav: Component<SidenavProps> = (props) => {
               </ld-badge>
             </Show>
           </ld-sidenav-navitem>
-          <ld-sidenav-navitem rounded>
+          <ld-sidenav-navitem
+            onClick={() => {
+              navigate('/todo/due-today')
+            }}
+            rounded
+            selected={props.pathname() === '/todo/due-today'}
+          >
             <ld-icon slot="icon" name="attention" /> Due today
             <Show when={!!props.todos.dueToday.length}>
               <ld-badge class="ml-ld-4 origin-left scale-75 -translate-y-px text-vc-100 -my-ld-4">
@@ -89,7 +103,13 @@ const Sidenav: Component<SidenavProps> = (props) => {
               </ld-badge>
             </Show>
           </ld-sidenav-navitem>
-          <ld-sidenav-navitem rounded>
+          <ld-sidenav-navitem
+            onClick={() => {
+              navigate('/todo/done')
+            }}
+            rounded
+            selected={props.pathname() === '/todo/done'}
+          >
             <ld-icon slot="icon" name="checkmark" /> Done{' '}
             <Show when={!!props.todos.done.length}>
               <ld-badge class="ml-ld-4 origin-left scale-75 -translate-y-px text-vc-100 -my-ld-4">

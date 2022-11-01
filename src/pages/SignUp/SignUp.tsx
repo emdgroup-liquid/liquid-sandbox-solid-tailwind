@@ -225,7 +225,6 @@ const SignUp: Component = () => {
                         control={emailControl}
                         label="Email"
                         name="name"
-                        // placeholder="e.g. jason.parse@example.com"
                         tone="dark"
                         type="email"
                       />
@@ -238,7 +237,6 @@ const SignUp: Component = () => {
                         control={passwordControl}
                         label="Password"
                         name="name"
-                        // placeholder="••••••••••••"
                         tone="dark"
                         type="password"
                       />

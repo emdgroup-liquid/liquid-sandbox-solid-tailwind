@@ -4,7 +4,7 @@ import {
   Show,
   mergeProps,
   type Component,
-  JSX,
+  type JSX,
   onMount,
   createSignal,
 } from 'solid-js'

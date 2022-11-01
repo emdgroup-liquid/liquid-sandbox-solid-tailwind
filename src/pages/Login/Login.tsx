@@ -114,7 +114,6 @@ const Login: Component = () => {
                     control={group.controls.email}
                     label="Email"
                     name="name"
-                    // placeholder="e.g. jason.parse@example.com"
                     tone="dark"
                     type="email"
                   />
@@ -124,7 +123,6 @@ const Login: Component = () => {
                     control={group.controls.password}
                     label="Password"
                     name="password"
-                    // placeholder="••••••••••••"
                     tone="dark"
                     type="password"
                   />

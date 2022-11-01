@@ -117,7 +117,6 @@ const Recover: Component = () => {
                       control={group.controls.email}
                       label="Account email"
                       name="name"
-                      // placeholder="e.g. jason.parse@example.com"
                       tone="dark"
                       type="email"
                     />

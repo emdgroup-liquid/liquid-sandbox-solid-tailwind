@@ -9,15 +9,18 @@ import {
   updateTodo,
 } from '../../services/todo'
 import { getSession } from '../../services/user'
-import { useNavigate } from '@solidjs/router'
+import { useLocation, useNavigate } from '@solidjs/router'
 import type { Component } from 'solid-js'
 import {
   createEffect,
+  createMemo,
   createSignal,
   For,
+  Match,
   onCleanup,
   onMount,
   Show,
+  Switch,
 } from 'solid-js'
 import { TransitionGroup } from 'solid-transition-group'
 
@@ -27,6 +30,32 @@ const Todo: Component = () => {
 
   const [loading, setLoading] = createSignal(true)
   const [loadingTodos, setLoadingTodos] = createSignal(true)
+
+  const parsePath = (str: string) => {
+    const to = str.replace(/^.*?#/, '')
+    // Hash-only hrefs like `#foo` from plain anchors will come in as `/#foo` whereas a link to
+    // `/foo` will be `/#/foo`. Check if the `to` starts with a `/` and if not append it as a hash
+    // to the current path, so we can handle these in-page anchors correctly.
+    if (!to.startsWith('/')) {
+      const [, path = '/'] = window.location.hash.split('#', 2)
+      return `${path}#${to}`
+    }
+    return to
+  }
+
+  const location = useLocation()
+  const pathname = createMemo(() => parsePath(location.pathname))
+
+  const selectedTodos = createMemo(() => {
+    switch (pathname()) {
+      case '/todo/due-today':
+        return todos.dueToday
+      case '/todo/done':
+        return todos.done
+      default:
+        return todos.upcomming
+    }
+  })
 
   createEffect(async () => {
     if (!(await getSession())) {
@@ -67,17 +96,23 @@ const Todo: Component = () => {
 
   return (
     <div class="w-full min-h-screen relative flex bg-neutral-010">
-      <Sidenav todos={todos} />
+      <Sidenav todos={todos} pathname={pathname} />
       <main
+        style={{
+          'max-width': 'max(80vw, 80rem)',
+        }}
         aria-busy={loading()}
         aria-live="polite"
-        class="flex flex-col px-ld-24 py-ld-40 relative h-screen flex-grow overflow-auto"
+        class="flex flex-col mx-auto px-ld-24 py-ld-40 relative h-screen flex-grow overflow-auto"
         ref={(el) => (mainRef = el)}
       >
         <Show when={!loading()} fallback={<ld-loading class="m-auto" />}>
           <>
             <ld-typo variant="h2" tag="h1" class="mt-6 xs:mt-1 mb-6">
-              Upcomming
+              <Switch fallback={'Upcomming'}>
+                <Match when={pathname() === '/todo/due-today'}>Due today</Match>
+                <Match when={pathname() === '/todo/done'}>Done</Match>
+              </Switch>
             </ld-typo>
             <AddTodo createTodo={createTodo} class="w-full mb-ld-16" />
           </>
@@ -87,17 +122,24 @@ const Todo: Component = () => {
             fallback={<ld-loading class="mx-auto mt-ld-32" />}
           >
             <Show
-              when={todos.all.length}
+              when={selectedTodos().length}
               fallback={
                 <ld-typo class="mx-auto mt-ld-32">
-                  Seems like there's nothing to do here.{' '}
+                  <Switch fallback={'Seems like there is nothing to be done.'}>
+                    <Match when={pathname() === '/todo/due-today'}>
+                      Seems like nothing is due today.
+                    </Match>
+                    <Match when={pathname() === '/todo/done'}>
+                      Seems like nothing is done yet.
+                    </Match>
+                  </Switch>
                   <ld-icon name="plant" class="transform translate-y-ld-4" />
                 </ld-typo>
               }
             >
               <ul class="relative">
                 <TransitionGroup name="todo-list-item">
-                  <For each={todos.all}>
+                  <For each={selectedTodos()}>
                     {(todo) => (
                       <TodoListItem
                         class="w-full mb-ld-12 todo-list-item"

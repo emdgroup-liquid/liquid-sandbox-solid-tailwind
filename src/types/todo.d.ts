@@ -4,4 +4,5 @@ interface Todo {
   id: string
   createdAt: string
   dueAt?: string
+  reminders?: string[]
 }
