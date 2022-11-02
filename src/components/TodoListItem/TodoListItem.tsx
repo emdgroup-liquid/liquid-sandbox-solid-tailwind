@@ -1,4 +1,6 @@
+import TextInput from '../TextInput/TextInput'
 import './TodoListItem.css'
+import { createFormControl, createFormGroup } from 'solid-forms'
 import type { Component } from 'solid-js'
 import {
   createMemo,
@@ -22,8 +24,29 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
   let checkLabelRef: HTMLLabelElement
   let checkRef: HTMLLdCheckboxElement
   let confirmDeleteModalRef: HTMLLdModalElement
-  let setCustomReminderModalRef: HTMLLdModalElement
-  const [updating, setUpdating] = createSignal(false)
+  let customReminderFormRef: HTMLFormElement
+  let customReminderModalRef: HTMLLdModalElement
+  const [deleting, setDeleting] = createSignal(false)
+
+  const customReminderGroup = createFormGroup({
+    date: createFormControl('', {
+      required: true,
+      validators: (value: string) => {
+        if (value.length === 0) return { missing: true }
+        if (isNaN(Date.parse(value))) return { invalid: true }
+        return null
+      },
+    }),
+    time: createFormControl('', {
+      required: true,
+      validators: (value: string) => {
+        if (value.length === 0) return { missing: true }
+        if (!/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(value))
+          return { invalid: true }
+        return null
+      },
+    }),
+  })
 
   const isLaterToday = createMemo(() => {
     return new Date().getHours() >= 16
@@ -113,11 +136,11 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
   }
 
   const deleteTodo = async () => {
-    if (updating()) return
+    if (deleting()) return
 
     dispatchEvent(new CustomEvent('ldNotificationClear'))
 
-    setUpdating(true)
+    setDeleting(true)
     try {
       await props.deleteTodo(props.todo.id)
       dispatchEvent(
@@ -138,11 +161,10 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
         })
       )
     }
-    setUpdating(false)
+    setDeleting(false)
   }
 
   const updateTodo = async (todo: Omit<Todo, 'createdAt'>) => {
-    setUpdating(true)
     try {
       await props.updateTodo({
         ...todo,
@@ -166,7 +188,6 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
         })
       )
     }
-    setUpdating(false)
   }
 
   const onCheckClick = (ev: MouseEvent) => {
@@ -174,6 +195,52 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
     if ((ev.target as HTMLElement).tagName === 'LABEL') {
       checkRef.checked = !checkRef.checked
     }
+  }
+
+  const onSubmitCustomReminder = async (ev: Event) => {
+    ev.preventDefault()
+    if (customReminderGroup.isSubmitted) return
+
+    customReminderGroup.controls.date.markTouched(true)
+    customReminderGroup.controls.time.markTouched(true)
+    if (!customReminderGroup.isValid) {
+      setTimeout(() => {
+        customReminderFormRef
+          .querySelector<HTMLInputElement>('.ld-input--invalid input')
+          ?.focus()
+      }, 100)
+      return
+    }
+
+    dispatchEvent(new CustomEvent('ldNotificationClear'))
+
+    customReminderGroup.markSubmitted(true)
+    const { date, time } = customReminderGroup.value
+    const dateWithTime = new Date(Date.parse(date || ''))
+    dateWithTime.setHours(parseInt(time?.split(':')[0] || '0') || 0)
+    dateWithTime.setMinutes(parseInt(time?.split(':')[1] || '0') || 0)
+
+    await updateTodo({
+      ...props.todo,
+      reminders: [
+        ...reminderOptions()
+          .filter(
+            (option) => option.selected && !option.value?.startsWith('custom')
+          )
+          .map((r) => r.value || ''),
+        'custom_' + dateWithTime.toISOString(),
+      ],
+    })
+
+    customReminderGroup.markSubmitted(false)
+    customReminderModalRef.close()
+  }
+
+  const invokeDeletionConfirmationDialog = () => {
+    if (deleting()) return
+
+    dispatchEvent(new CustomEvent('ldNotificationClear'))
+    confirmDeleteModalRef.showModal()
   }
 
   onMount(() => {
@@ -187,13 +254,6 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
       capture: true,
     })
   })
-
-  const invokeDeletionConfirmationDialog = () => {
-    if (updating()) return
-
-    dispatchEvent(new CustomEvent('ldNotificationClear'))
-    confirmDeleteModalRef.showModal()
-  }
 
   return (
     <li
@@ -229,7 +289,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
             await deleteTodo()
             confirmDeleteModalRef.close()
           }}
-          progress={updating() ? 'pending' : undefined}
+          progress={deleting() ? 'pending' : undefined}
           slot="footer"
           style="width: 8rem"
         >
@@ -249,31 +309,46 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
             }))
           )
         }}
-        ref={(el: HTMLLdModalElement) => (setCustomReminderModalRef = el)}
+        ref={(el: HTMLLdModalElement) => (customReminderModalRef = el)}
       >
         <ld-typo slot="header">When do you want to be reminded?</ld-typo>
-        <div class="grid grid-cols-2 gap-ld-12">
-          <ld-input type="date" tone="dark" />
-          <ld-input type="time" tone="dark" />
-        </div>
+        <form
+          ref={(el) => (customReminderFormRef = el)}
+          class="grid grid-cols-2 gap-ld-12"
+          onSubmit={onSubmitCustomReminder}
+        >
+          <TextInput
+            autofocus
+            control={customReminderGroup.controls.date}
+            label="Date"
+            name="date"
+            tone="dark"
+            type="date"
+          />
+          <TextInput
+            control={customReminderGroup.controls.time}
+            label="Time"
+            name="time"
+            tone="dark"
+            type="time"
+          />
+        </form>
         <div slot="footer" class="grid grid-cols-2 gap-ld-12 w-full">
           <ld-button
             class=""
             mode="ghost"
             onClick={() => {
-              setCustomReminderModalRef.close()
+              customReminderModalRef.close()
             }}
           >
             Cancel
           </ld-button>
           <ld-button
             class=""
-            onClick={async () => {
-              // TODO: save custom reminder
-              // await updateTodo()
-              setCustomReminderModalRef.close()
+            onClick={async (ev) => {
+              await onSubmitCustomReminder(ev)
             }}
-            progress={updating() ? 'pending' : undefined}
+            progress={customReminderGroup.isSubmitted ? 'pending' : undefined}
           >
             Set reminder
           </ld-button>
@@ -366,7 +441,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
                       }))
                     )
                     if (ev.detail.includes('custom')) {
-                      setCustomReminderModalRef.showModal()
+                      customReminderModalRef.showModal()
                     } else {
                       // prevent update on modal cancel
                       const needsUpdate =

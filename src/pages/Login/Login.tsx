@@ -112,7 +112,7 @@ const Login: Component = () => {
                     autocomplete="email"
                     control={group.controls.email}
                     label="Email"
-                    name="name"
+                    name="email"
                     tone="dark"
                     type="email"
                   />
