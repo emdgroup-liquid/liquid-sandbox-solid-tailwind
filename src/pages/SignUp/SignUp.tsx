@@ -5,8 +5,15 @@ import { createUser, getSession, userExists } from '../../services/user'
 import { getPasswordRating, getPasswordScore } from './passwordScore'
 import { useNavigate } from '@solidjs/router'
 import { createFormControl } from 'solid-forms'
-import type { Component } from 'solid-js'
-import { createEffect, createSignal, For, Match, Show, Switch } from 'solid-js'
+import {
+  createEffect,
+  createSignal,
+  For,
+  Match,
+  Show,
+  Switch,
+  type Component,
+} from 'solid-js'
 
 const SignUpStep: Component<{
   compact?: boolean

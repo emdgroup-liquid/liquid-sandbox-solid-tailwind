@@ -1,14 +1,15 @@
 import BreakpointHelper from './components/BreakpointHelper/BreakpointHelper'
+import CookieConsent from './components/CookieConsent/CookieConsent'
 import Footer from './components/Footer/Footer'
 import Home from './pages/Home/Home'
 import Login from './pages/Login/Login'
+import Privacy from './pages/Privacy/Privacy'
 import Recover from './pages/Recover/Recover'
 import SignUp from './pages/SignUp/SignUp'
 import Terms from './pages/Terms/Terms'
 import Todo from './pages/Todo/Todo'
 import { Routes, Route } from '@solidjs/router'
-import type { Component } from 'solid-js'
-import { Show } from 'solid-js'
+import { Show, type Component } from 'solid-js'
 
 const App: Component = () => {
   return (
@@ -29,11 +30,13 @@ const App: Component = () => {
           <Route path="/recover" component={Recover} />
           <Route path="/signup" component={SignUp} />
           <Route path="/terms" component={Terms} />
+          <Route path="/privacy" component={Privacy} />
         </Routes>
       </div>
       <Routes>
         <Route path="/" component={Footer} />
       </Routes>
+      <CookieConsent />
     </div>
   )
 }

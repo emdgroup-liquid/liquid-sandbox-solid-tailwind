@@ -1,7 +1,6 @@
 import breakpoints from '../../breakpoints'
 import styles from './BreakpointHelper.module.css'
-import type { Component } from 'solid-js'
-import { For } from 'solid-js'
+import { For, type Component } from 'solid-js'
 
 const BreakpointHelper: Component = () => {
   return (

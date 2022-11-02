@@ -1,7 +1,6 @@
 import TextInput from '../../components/TextInput/TextInput'
 import { createFormGroup, createFormControl } from 'solid-forms'
-import type { Component } from 'solid-js'
-import { JSX } from 'solid-js'
+import { JSX, type Component } from 'solid-js'
 
 interface AddTodoProps {
   class?: string

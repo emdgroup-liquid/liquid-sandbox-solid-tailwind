@@ -10,7 +10,6 @@ import {
 } from '../../services/todo'
 import { getSession } from '../../services/user'
 import { useLocation, useNavigate } from '@solidjs/router'
-import type { Component } from 'solid-js'
 import {
   createEffect,
   createMemo,
@@ -21,6 +20,7 @@ import {
   onMount,
   Show,
   Switch,
+  type Component,
 } from 'solid-js'
 import { TransitionGroup } from 'solid-transition-group'
 

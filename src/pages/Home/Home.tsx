@@ -1,5 +1,5 @@
 import Logo from '../../components/Logo/Logo'
-import type { Component } from 'solid-js'
+import { type Component } from 'solid-js'
 
 const Home: Component = () => {
   return (

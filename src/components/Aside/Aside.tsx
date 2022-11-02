@@ -1,5 +1,4 @@
-import type { Component } from 'solid-js'
-import { JSX } from 'solid-js'
+import { type JSX, type Component } from 'solid-js'
 
 interface AsideProps {
   class?: string

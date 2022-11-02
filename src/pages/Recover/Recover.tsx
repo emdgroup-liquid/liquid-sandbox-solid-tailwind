@@ -4,8 +4,7 @@ import TextInput from '../../components/TextInput/TextInput'
 import { getSession } from '../../services/user'
 import { useNavigate } from '@solidjs/router'
 import { createFormGroup, createFormControl } from 'solid-forms'
-import type { Component } from 'solid-js'
-import { createEffect, createSignal, Show } from 'solid-js'
+import { createEffect, createSignal, Show, type Component } from 'solid-js'
 
 const Recover: Component = () => {
   const navigate = useNavigate()

@@ -2,7 +2,7 @@ import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
 import { type Component } from 'solid-js'
 
-const Terms: Component = () => {
+const Privacy: Component = () => {
   return (
     <div class="flex w-full max-h-screen">
       <Aside>
@@ -19,7 +19,7 @@ const Terms: Component = () => {
 
           <div class="mb-auto pb-24">
             <ld-typo variant="h1" class="block my-ld-40">
-              Terms and Conditions
+              Privacy Statement
             </ld-typo>
 
             <ld-typo class="block mb-ld-32">
@@ -133,4 +133,4 @@ const Terms: Component = () => {
   )
 }
 
-export default Terms
+export default Privacy
