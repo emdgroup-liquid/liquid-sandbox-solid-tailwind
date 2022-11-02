@@ -21,6 +21,7 @@ interface TextInputProps {
   placeholder?: string
   size?: 'sm' | 'lg'
   type?: string
+  min?: string
   tone?: 'dark'
   spellcheck?: boolean
   successMessage?: string | JSX.Element
@@ -79,6 +80,7 @@ const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
         <input
           autocapitalize="off"
           autocomplete={props.autocomplete}
+          min={props.min}
           onInput={(ev) => {
             const eventTarget = ev.currentTarget
             props.control?.setValue(eventTarget.value || '')
@@ -141,6 +143,11 @@ const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
       <Show when={props.control.isTouched && props.control.errors?.missing}>
         <ld-input-message mode="error">
           {thisField} is required.
+        </ld-input-message>
+      </Show>
+      <Show when={props.control.isTouched && props.control.errors?.inPast}>
+        <ld-input-message mode="error">
+          {thisField} must be in the future.
         </ld-input-message>
       </Show>
       <Show when={props.control.isTouched && props.control.errors?.invalid}>

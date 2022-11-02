@@ -29,20 +29,13 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
   const [deleting, setDeleting] = createSignal(false)
 
   const customReminderGroup = createFormGroup({
-    date: createFormControl('', {
+    dateTime: createFormControl('', {
       required: true,
       validators: (value: string) => {
         if (value.length === 0) return { missing: true }
-        if (isNaN(Date.parse(value))) return { invalid: true }
-        return null
-      },
-    }),
-    time: createFormControl('', {
-      required: true,
-      validators: (value: string) => {
-        if (value.length === 0) return { missing: true }
-        if (!/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(value))
-          return { invalid: true }
+        const stamp = Date.parse(value)
+        if (isNaN(stamp)) return { invalid: true }
+        if (new Date().getTime() - stamp > 0) return { inPast: true }
         return null
       },
     }),
@@ -201,8 +194,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
     ev.preventDefault()
     if (customReminderGroup.isSubmitted) return
 
-    customReminderGroup.controls.date.markTouched(true)
-    customReminderGroup.controls.time.markTouched(true)
+    customReminderGroup.controls.dateTime.markTouched(true)
     if (!customReminderGroup.isValid) {
       setTimeout(() => {
         customReminderFormRef
@@ -215,10 +207,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
     dispatchEvent(new CustomEvent('ldNotificationClear'))
 
     customReminderGroup.markSubmitted(true)
-    const { date, time } = customReminderGroup.value
-    const dateWithTime = new Date(Date.parse(date || ''))
-    dateWithTime.setHours(parseInt(time?.split(':')[0] || '0') || 0)
-    dateWithTime.setMinutes(parseInt(time?.split(':')[1] || '0') || 0)
+    const { dateTime } = customReminderGroup.value
 
     await updateTodo({
       ...props.todo,
@@ -226,7 +215,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
         .filter((r) => r.selected)
         .map((r) => {
           if (r.value === 'custom') {
-            r.value = 'custom_' + dateWithTime.toISOString()
+            r.value = 'custom_' + new Date(dateTime || '').toISOString()
           }
           return r.value || ''
         }),
@@ -314,23 +303,17 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
         <ld-typo slot="header">When do you want to be reminded?</ld-typo>
         <form
           ref={(el) => (customReminderFormRef = el)}
-          class="grid grid-cols-2 gap-ld-12"
           onSubmit={onSubmitCustomReminder}
         >
           <TextInput
             autofocus
-            control={customReminderGroup.controls.date}
-            label="Date"
-            name="date"
+            class="w-full"
+            control={customReminderGroup.controls.dateTime}
+            label="Date and time"
+            min={new Date().toISOString()}
+            name="reminder"
             tone="dark"
-            type="date"
-          />
-          <TextInput
-            control={customReminderGroup.controls.time}
-            label="Time"
-            name="time"
-            tone="dark"
-            type="time"
+            type="datetime-local"
           />
         </form>
         <div slot="footer" class="grid grid-cols-2 gap-ld-12 w-full">
@@ -380,6 +363,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
               <ld-label>
                 Description
                 <ld-input
+                  class="[&::part(input)]:resize-y"
                   multiline
                   rows={4}
                   onBlur={(ev) => {
