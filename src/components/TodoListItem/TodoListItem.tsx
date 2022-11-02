@@ -29,7 +29,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
     return new Date().getHours() >= 16
   })
 
-  const tomorrow = createMemo(() => {
+  const tomorrowText = createMemo(() => {
     return (
       'Tomorrow (' +
       new Intl.DateTimeFormat('en', { weekday: 'short' }).format(
@@ -39,7 +39,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
     )
   })
 
-  const nextWeek = createMemo(() => {
+  const nextWeekText = createMemo(() => {
     return (
       'Next week (' +
       new Intl.DateTimeFormat('en', { weekday: 'short' }).format(
@@ -49,27 +49,51 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
     )
   })
 
+  const customReminderValue = createMemo(() =>
+    props.todo.reminders?.find((r) => r.startsWith('custom_'))
+  )
+  const customReminderText = createMemo(() => {
+    const crValue = customReminderValue()
+    if (!crValue) return
+    const date = new Date(crValue.split('_')[1])
+    return (
+      new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).format(date) +
+      ' (' +
+      new Intl.DateTimeFormat('en', { timeStyle: 'short' }).format(date) +
+      ')'
+    )
+  })
+
   const [reminderOptions, setReminderOptions] = createSignal([
     ...(isLaterToday()
       ? []
       : [
           {
             value: 'later-today',
-            selected: false,
+            selected: props.todo.reminders?.includes('later-today'),
           },
         ]),
     {
       value: 'tomorrow',
-      selected: false,
+      selected: props.todo.reminders?.includes('tomorrow'),
     },
     {
       value: 'next-week',
-      selected: false,
+      selected: props.todo.reminders?.includes('next-week'),
     },
-    {
-      value: 'custom',
-      selected: false,
-    },
+    ...(customReminderValue()
+      ? [
+          {
+            value: customReminderValue(),
+            selected: true,
+          },
+        ]
+      : [
+          {
+            value: 'custom',
+            selected: false,
+          },
+        ]),
   ])
 
   const reminderTextFrom = (optionValue: string) => {
@@ -77,14 +101,14 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
       case 'later-today':
         return 'Later today (4:00 PM)'
       case 'tomorrow':
-        return tomorrow()
+        return tomorrowText()
       case 'next-week':
-        return nextWeek()
+        return nextWeekText()
       case 'custom':
         return 'Custom...'
       default:
-        // TODO: parse custom value
-        return 'Custom value'
+        // Parse custom reminder value
+        return customReminderText()
     }
   }
 
@@ -180,6 +204,9 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
     >
       <ld-modal
         class="[&::part(footer)]:grid-cols-1"
+        onLdmodalclosed={() => {
+          // TODO: set focus
+        }}
         ref={(el: HTMLLdModalElement) => (confirmDeleteModalRef = el)}
       >
         <ld-typo slot="header">Are you sure?</ld-typo>
@@ -210,15 +237,18 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
         </ld-button>
       </ld-modal>
       <ld-modal
+        class="[&::part(footer)]:grid-cols-1"
+        onLdmodalclosed={() => {
+          // TODO: set focus
+        }}
         onLdmodalclosing={() => {
           setReminderOptions((s) =>
             s.map((r) => ({
               ...r,
-              selected: r.value === 'custom' ? false : r.selected,
+              selected: r.value === 'custom' ? false : !!r.selected,
             }))
           )
         }}
-        class="[&::part(footer)]:grid-cols-1"
         ref={(el: HTMLLdModalElement) => (setCustomReminderModalRef = el)}
       >
         <ld-typo slot="header">When do you want to be reminded?</ld-typo>
@@ -332,7 +362,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
                     setReminderOptions((s) =>
                       s.map((r) => ({
                         ...r,
-                        selected: ev.detail.includes(r.value),
+                        selected: ev.detail.includes(r.value || ''),
                       }))
                     )
                     if (ev.detail.includes('custom')) {
@@ -346,7 +376,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
                           ...props.todo,
                           reminders: reminderOptions()
                             .filter((option) => option.selected)
-                            .map((r) => r.value),
+                            .map((r) => r.value || ''),
                         })
                       }
                     }
@@ -360,7 +390,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
                         value={option.value}
                         selected={option.selected}
                       >
-                        {reminderTextFrom(option.value)}
+                        {reminderTextFrom(option.value || '')}
                       </ld-option>
                     )}
                   </For>
