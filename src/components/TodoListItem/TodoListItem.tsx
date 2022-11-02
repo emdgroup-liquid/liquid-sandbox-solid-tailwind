@@ -222,14 +222,14 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
 
     await updateTodo({
       ...props.todo,
-      reminders: [
-        ...reminderOptions()
-          .filter(
-            (option) => option.selected && !option.value?.startsWith('custom')
-          )
-          .map((r) => r.value || ''),
-        'custom_' + dateWithTime.toISOString(),
-      ],
+      reminders: reminderOptions()
+        .filter((r) => r.selected)
+        .map((r) => {
+          if (r.value === 'custom') {
+            r.value = 'custom_' + dateWithTime.toISOString()
+          }
+          return r.value || ''
+        }),
     })
 
     customReminderGroup.markSubmitted(false)
@@ -435,10 +435,17 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
                         .sort()
                     )
                     setReminderOptions((s) =>
-                      s.map((r) => ({
-                        ...r,
-                        selected: ev.detail.includes(r.value || ''),
-                      }))
+                      s.map((r) => {
+                        const selected = ev.detail.includes(r.value || '')
+                        return {
+                          ...r,
+                          value:
+                            r.value?.startsWith('custom_') && !selected
+                              ? 'custom'
+                              : r.value,
+                          selected: ev.detail.includes(r.value || ''),
+                        }
+                      })
                     )
                     if (ev.detail.includes('custom')) {
                       customReminderModalRef.showModal()
