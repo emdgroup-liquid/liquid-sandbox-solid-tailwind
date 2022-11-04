@@ -9,6 +9,7 @@ import {
   updateTodo,
 } from '../../services/todo'
 import { getSession } from '../../services/user'
+import { parsePath } from '../../utils/path'
 import { useLocation, useNavigate } from '@solidjs/router'
 import {
   createEffect,
@@ -31,18 +32,6 @@ const Todo: Component = () => {
   const [loading, setLoading] = createSignal(true)
   const [loadingTodos, setLoadingTodos] = createSignal(true)
 
-  const parsePath = (str: string) => {
-    const to = str.replace(/^.*?#/, '')
-    // Hash-only hrefs like `#foo` from plain anchors will come in as `/#foo` whereas a link to
-    // `/foo` will be `/#/foo`. Check if the `to` starts with a `/` and if not append it as a hash
-    // to the current path, so we can handle these in-page anchors correctly.
-    if (!to.startsWith('/')) {
-      const [, path = '/'] = window.location.hash.split('#', 2)
-      return `${path}#${to}`
-    }
-    return to
-  }
-
   const location = useLocation()
   const pathname = createMemo(() => parsePath(location.pathname))
 
@@ -61,18 +50,10 @@ const Todo: Component = () => {
     if (!(await getSession())) {
       navigate('/login', { replace: true })
     } else {
+      setLoading(false)
       await initStore()
       setLoadingTodos(false)
     }
-  })
-
-  createEffect(async () => {
-    dispatchEvent(new CustomEvent('ldNotificationClear'))
-    const session = await getSession()
-    if (!session) {
-      navigate('/login', { replace: true })
-    }
-    setLoading(false)
   })
 
   const collapseSiblings = (ev: Event) => {

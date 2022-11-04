@@ -1,5 +1,6 @@
 import TextInput from '../TextInput/TextInput'
 import './TodoListItem.css'
+import { useNavigate } from '@solidjs/router'
 import { createFormControl, createFormGroup } from 'solid-forms'
 import type { Component } from 'solid-js'
 import {
@@ -27,6 +28,8 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
   let customReminderFormRef: HTMLFormElement
   let customReminderModalRef: HTMLLdModalElement
   const [deleting, setDeleting] = createSignal(false)
+
+  const navigate = useNavigate()
 
   const customReminderGroup = createFormGroup({
     dateTime: createFormControl('', {
@@ -409,7 +412,25 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
               </ld-label>
 
               <ld-label>
-                Remind me
+                <span>
+                  Remind me{' '}
+                  <ld-tooltip
+                    arrow
+                    position="right bottom"
+                    trigger-type="click"
+                  >
+                    <ld-typo>
+                      We will send you a notification Email to your account
+                      Email address. You can change your notification settings{' '}
+                      <ld-link
+                        onClick={() => navigate('/notification-settings')}
+                      >
+                        here
+                      </ld-link>
+                      .
+                    </ld-typo>
+                  </ld-tooltip>
+                </span>
                 <ld-select
                   onLdchange={(ev) => {
                     const compareBefore = JSON.stringify(

@@ -119,10 +119,22 @@ const Sidenav: Component<SidenavProps> = (props) => {
           </ld-sidenav-navitem>
           <ld-sidenav-separator />
           <ld-sidenav-heading>Preferences</ld-sidenav-heading>
-          <ld-sidenav-navitem rounded>
+          <ld-sidenav-navitem
+            onClick={() => {
+              navigate('/notification-settings')
+            }}
+            rounded
+            selected={props.pathname() === '/notification-settings'}
+          >
             <ld-icon slot="icon" name="conversation" /> Notification settings
           </ld-sidenav-navitem>
-          <ld-sidenav-navitem rounded>
+          <ld-sidenav-navitem
+            onClick={() => {
+              navigate('/account-settings')
+            }}
+            rounded
+            selected={props.pathname() === '/account-settings'}
+          >
             <ld-icon slot="icon" name="user" /> Account settings
           </ld-sidenav-navitem>
         </ld-sidenav-slider>
