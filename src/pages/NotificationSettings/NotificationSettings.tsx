@@ -82,7 +82,7 @@ const NotificationSettings: Component = () => {
           </ld-typo>
 
           <ld-card size="sm">
-            <ld-label class="w-full px-ld-4" position="left" size="m">
+            <ld-label class="w-full" position="left" size="m">
               I'd like to receive a notifications via email.
               <ld-toggle
                 checked={settings.notificationsEnabled}

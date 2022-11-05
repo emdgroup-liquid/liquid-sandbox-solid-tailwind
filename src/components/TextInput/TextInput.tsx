@@ -27,6 +27,7 @@ interface TextInputProps {
   successMessage?: string | JSX.Element
   iconStart?: JSX.Element
   iconEnd?: JSX.Element
+  tooltip?: JSX.Element
 }
 
 const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
@@ -58,7 +59,9 @@ const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
 
   return (
     <ld-label ref={props.ref} class={props.class} classList={props.classList}>
-      {props.label}
+      <span>
+        {props.label} {props.tooltip}
+      </span>
       <div
         class="ld-input"
         classList={{
