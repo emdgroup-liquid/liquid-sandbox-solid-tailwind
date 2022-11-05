@@ -265,28 +265,27 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
         <ld-typo class="text-center">
           You won't be able to undo this action.
         </ld-typo>
-        <ld-button
-          slot="footer"
-          style="width: 8rem"
-          mode="ghost"
-          onClick={() => {
-            confirmDeleteModalRef.close()
-          }}
-        >
-          Cancel
-        </ld-button>
-        <ld-button
-          mode="danger"
-          onClick={async () => {
-            await deleteTodo()
-            confirmDeleteModalRef.close()
-          }}
-          progress={deleting() ? 'pending' : undefined}
-          slot="footer"
-          style="width: 8rem"
-        >
-          Delete task
-        </ld-button>
+        <div slot="footer" class="grid grid-cols-2 gap-ld-12 w-full">
+          <ld-button
+            style="width: 8rem"
+            mode="ghost"
+            onClick={() => {
+              confirmDeleteModalRef.close()
+            }}
+          >
+            Cancel
+          </ld-button>
+          <ld-button
+            mode="danger"
+            onClick={async () => {
+              await deleteTodo()
+              confirmDeleteModalRef.close()
+            }}
+            progress={deleting() ? 'pending' : undefined}
+          >
+            Delete task
+          </ld-button>
+        </div>
       </ld-modal>
       <ld-modal
         class="[&::part(footer)]:grid-cols-1"

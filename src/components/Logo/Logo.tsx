@@ -1,3 +1,4 @@
+import { useNavigate } from '@solidjs/router'
 import { type JSX, type Component } from 'solid-js'
 
 interface LogoProps {
@@ -11,6 +12,8 @@ interface LogoProps {
 }
 
 const Logo: Component<LogoProps> = (props) => {
+  const navigate = useNavigate()
+
   return (
     <ld-typo
       role="banner"
@@ -21,7 +24,10 @@ const Logo: Component<LogoProps> = (props) => {
       tag={props.tag || 'h1'}
       variant={props.variant || 'b5'}
     >
-      <a href={props.href} class="contents">
+      <a
+        onClick={() => navigate(props.href || '/')}
+        class="contents cursor-pointer"
+      >
         <abbr class="text-vc" aria-label="Uxer Experience, Stragegy and Design">
           UXSD
         </abbr>{' '}

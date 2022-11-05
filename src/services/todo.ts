@@ -23,8 +23,12 @@ const [state, setState] = createStore({
   },
 })
 
+let firstTimeInit = true
 export async function initStore() {
-  await simulateFetch()
+  if (firstTimeInit) {
+    await simulateFetch()
+    firstTimeInit = false
+  }
   const email = await getSession()
   if (!email) {
     throw new Error('No session.')

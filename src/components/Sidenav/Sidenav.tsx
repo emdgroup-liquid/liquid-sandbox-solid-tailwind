@@ -71,6 +71,7 @@ const Sidenav: Component<SidenavProps> = (props) => {
             style={{ width: '10rem' }}
             tag="span"
             variant="b6"
+            href={'/todo'}
           />
         </ld-sidenav-header>
         <ld-sidenav-slider label="To-Do">

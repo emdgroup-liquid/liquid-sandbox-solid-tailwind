@@ -3,7 +3,7 @@ import Sidenav from '../../components/Sidenav/Sidenav'
 import TextInput from '../../components/TextInput/TextInput'
 import { initStore as initSettingsStore } from '../../services/settings'
 import { initStore as initTodoStore, todos } from '../../services/todo'
-import { updateUser, getSession } from '../../services/user'
+import { deleteUser, getSession, updateUser } from '../../services/user'
 import { parsePath } from '../../utils/path'
 import { useLocation, useNavigate } from '@solidjs/router'
 import { createFormControl } from 'solid-forms'
@@ -16,12 +16,15 @@ import {
 } from 'solid-js'
 
 const AccountSettings: Component = () => {
+  let confirmDeleteModalRef: HTMLLdModalElement
   let emailFormRef: HTMLFormElement
   let passwordFormRef: HTMLFormElement
 
   const navigate = useNavigate()
 
   const [loading, setLoading] = createSignal(true)
+
+  const [deleting, setDeleting] = createSignal(false)
 
   const location = useLocation()
   const pathname = createMemo(() => parsePath(location.pathname))
@@ -146,6 +149,35 @@ const AccountSettings: Component = () => {
     }
   }
 
+  const invokeDeletionConfirmationDialog = () => {
+    if (deleting()) return
+
+    dispatchEvent(new CustomEvent('ldNotificationClear'))
+    confirmDeleteModalRef.showModal()
+  }
+
+  const deleteAccount = async () => {
+    if (deleting()) return
+
+    dispatchEvent(new CustomEvent('ldNotificationClear'))
+
+    setDeleting(true)
+    try {
+      await deleteUser()
+      navigate('/login')
+    } catch (err) {
+      dispatchEvent(
+        new CustomEvent('ldNotificationAdd', {
+          detail: {
+            content: (err as Error)?.message || 'Failed deleting account.',
+            type: 'alert',
+          },
+        })
+      )
+    }
+    setDeleting(false)
+  }
+
   return (
     <div class="w-full min-h-screen relative flex bg-neutral-010">
       <Sidenav todos={todos} pathname={pathname} />
@@ -211,7 +243,7 @@ const AccountSettings: Component = () => {
             </form>
           </ld-card>
 
-          <ld-card size="sm">
+          <ld-card class="mb-ld-16" size="sm">
             <form
               aria-label="Update password"
               autocomplete="on"
@@ -245,6 +277,52 @@ const AccountSettings: Component = () => {
                 Update Password
               </ld-button>
             </form>
+          </ld-card>
+
+          <ld-card size="sm">
+            <ld-typo tag="h2" class="text-thm-error mb-ld-12" variant="h4">
+              Danger zone
+            </ld-typo>
+            <div class="grid sm:grid-cols-[12rem_minmax(0,_1fr)] w-full gap-ld-16">
+              <ld-button
+                mode="danger"
+                onClick={invokeDeletionConfirmationDialog}
+              >
+                Delete account
+              </ld-button>
+            </div>
+            <ld-modal
+              class="[&::part(footer)]:grid-cols-1"
+              onLdmodalclosed={() => {
+                // TODO: set focus
+              }}
+              ref={(el: HTMLLdModalElement) => (confirmDeleteModalRef = el)}
+            >
+              <ld-typo slot="header">Are you sure?</ld-typo>
+              <ld-typo class="text-center">
+                You won't be able to undo this action.
+              </ld-typo>
+              <div slot="footer" class="grid grid-cols-2 gap-ld-12 w-full">
+                <ld-button
+                  mode="ghost"
+                  onClick={() => {
+                    confirmDeleteModalRef.close()
+                  }}
+                >
+                  Cancel
+                </ld-button>
+                <ld-button
+                  mode="danger"
+                  onClick={async () => {
+                    await deleteAccount()
+                    confirmDeleteModalRef.close()
+                  }}
+                  progress={deleting() ? 'pending' : undefined}
+                >
+                  Delete account
+                </ld-button>
+              </div>
+            </ld-modal>
           </ld-card>
         </Show>
       </main>

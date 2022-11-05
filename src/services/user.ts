@@ -52,6 +52,16 @@ export async function updateUser(
   }
 }
 
+export async function deleteUser() {
+  await simulateFetch()
+  const email = await getSession()
+  localStorage.removeItem(`todos_${email}`)
+  localStorage.removeItem(`settings_${email}`)
+  localStorage.removeItem('ld-cookie-consent')
+  localStorage.removeItem(`user_${email}`)
+  localStorage.removeItem('user_session')
+}
+
 let firstTimeGetSession = true
 export async function getSession() {
   if (firstTimeGetSession) {
