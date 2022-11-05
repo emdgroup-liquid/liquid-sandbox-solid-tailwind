@@ -92,7 +92,9 @@ const Recover: Component = () => {
                         We have sent you a password reset link via email.
                       </ld-typo>
 
-                      <ld-link href="/login">Back to Login</ld-link>
+                      <ld-link onClick={() => navigate('/login')}>
+                        Back to Login
+                      </ld-link>
                     </>
                   }
                 >
@@ -129,7 +131,9 @@ const Recover: Component = () => {
                     </ld-button>
                   </form>
 
-                  <ld-link href="/login">Back to Login</ld-link>
+                  <ld-link onClick={() => navigate('/login')}>
+                    Back to Login
+                  </ld-link>
                 </Show>
               </div>
             </>

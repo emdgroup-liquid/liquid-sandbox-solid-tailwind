@@ -1,4 +1,4 @@
-export function getPasswordScore(password: string) {
+export function getPasswordScore(password?: string) {
   let score = 0
   if (!password) return score
 
@@ -28,7 +28,7 @@ export function getPasswordScore(password: string) {
   return Math.floor(score)
 }
 
-export function getPasswordRating(password: string) {
+export function getPasswordRating(password?: string) {
   const score = getPasswordScore(password)
   if (score > 80) return 'strong'
   if (score > 60) return 'good'

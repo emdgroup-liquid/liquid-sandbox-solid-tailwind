@@ -4,7 +4,7 @@ import { simulateFetch } from './utils'
 export async function createUser(email: string, password: string) {
   await simulateFetch()
   localStorage.setItem(`user_${email}`, password)
-  localStorage.setItem('user_session', 'yes') // Fake session.
+  localStorage.setItem('user_session', email) // Fake session.
 }
 
 export async function userExists(email: string) {
@@ -42,6 +42,13 @@ export async function updateUser(
       localStorage.getItem(`settings_${currentEmail}`) || '[]'
     )
     localStorage.removeItem(`settings_${currentEmail}`)
+    localStorage.setItem(
+      `user_${toUpdate.email}`,
+      localStorage.getItem(`user_${currentEmail}`) || ''
+    )
+    localStorage.removeItem(`user_${currentEmail}`)
+  } else if (toUpdate.password) {
+    localStorage.setItem(`user_${currentEmail}`, toUpdate.password)
   }
 }
 

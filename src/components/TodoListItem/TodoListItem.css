@@ -14,7 +14,3 @@
 .todo-list-item-exit-active {
   position: absolute;
 }
-/*
-.todo-list-item-modal::part(footer) {
-  grid-auto-columns: 1fr;
-}*/

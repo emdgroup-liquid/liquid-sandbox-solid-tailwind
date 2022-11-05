@@ -1,3 +1,4 @@
+import PasswordRating from '../../components/PasswordRating/PasswordRating'
 import Sidenav from '../../components/Sidenav/Sidenav'
 import TextInput from '../../components/TextInput/TextInput'
 import { initStore as initSettingsStore } from '../../services/settings'
@@ -16,6 +17,7 @@ import {
 
 const AccountSettings: Component = () => {
   let emailFormRef: HTMLFormElement
+  let passwordFormRef: HTMLFormElement
 
   const navigate = useNavigate()
 
@@ -30,6 +32,13 @@ const AccountSettings: Component = () => {
       if (value.length === 0) return { missing: true }
       if (!value.includes('@')) return { invalid: true }
       return null
+    },
+  })
+
+  const passwordControl = createFormControl('', {
+    required: true,
+    validators: (value: string) => {
+      return value.length === 0 ? { missing: true } : null
     },
   })
 
@@ -90,6 +99,53 @@ const AccountSettings: Component = () => {
     }
   }
 
+  const updatePassword = async (ev: Event) => {
+    ev.preventDefault()
+    passwordControl.markTouched(true)
+
+    if (!passwordControl.isValid) {
+      setTimeout(() => {
+        passwordFormRef
+          .querySelector<HTMLInputElement>('.ld-input input')
+          ?.focus()
+      }, 100)
+      return
+    }
+
+    dispatchEvent(new CustomEvent('ldNotificationClear'))
+    passwordControl.markSubmitted(true)
+
+    const password = passwordControl.value
+
+    let updateSuccessfull = false
+    try {
+      await updateUser({ password })
+      updateSuccessfull = true
+    } catch (err) {
+      dispatchEvent(
+        new CustomEvent('ldNotificationAdd', {
+          detail: {
+            content: (err as Error)?.message || 'Failed updating password.',
+            type: 'alert',
+          },
+        })
+      )
+    }
+
+    passwordControl.markSubmitted(false)
+
+    if (updateSuccessfull) {
+      dispatchEvent(
+        new CustomEvent('ldNotificationAdd', {
+          detail: {
+            content: 'Password has been updated.',
+            type: 'info',
+          },
+        })
+      )
+    }
+  }
+
   return (
     <div class="w-full min-h-screen relative flex bg-neutral-010">
       <Sidenav todos={todos} pathname={pathname} />
@@ -106,10 +162,11 @@ const AccountSettings: Component = () => {
             Account Settings
           </ld-typo>
 
-          <ld-card size="sm">
+          <ld-card size="sm" class="mb-ld-16">
             <form
+              aria-label="Update Email address"
               autocomplete="on"
-              class="flex flex-col sm:flex-row w-full gap-ld-16 sm:grid-cols-2"
+              class="grid sm:grid-cols-[minmax(0,_1fr)_12rem] w-full gap-ld-16"
               novalidate
               onSubmit={updateEmail}
               ref={(el) => (emailFormRef = el)}
@@ -150,6 +207,42 @@ const AccountSettings: Component = () => {
                 progress={emailControl.isSubmitted ? 'pending' : undefined}
               >
                 Update Email
+              </ld-button>
+            </form>
+          </ld-card>
+
+          <ld-card size="sm">
+            <form
+              aria-label="Update password"
+              autocomplete="on"
+              class="grid sm:grid-cols-[minmax(0,_1fr)_12rem] w-full gap-ld-16"
+              novalidate
+              onSubmit={updatePassword}
+              ref={(el) => (passwordFormRef = el)}
+            >
+              <div class="grid grow">
+                <TextInput
+                  class="w-full"
+                  autocomplete="password"
+                  autofocus
+                  control={passwordControl}
+                  label="New password"
+                  name="name"
+                  tone="dark"
+                  type="password"
+                />
+                <PasswordRating
+                  class="flex flex-wrap transition-opacity items-baseline"
+                  passwordValue={passwordControl.value}
+                />
+              </div>
+
+              <ld-button
+                class="self-start mt-ld-24 w-full sm:w-auto -translate-y-ld-2"
+                onClick={updatePassword}
+                progress={passwordControl.isSubmitted ? 'pending' : undefined}
+              >
+                Update Password
               </ld-button>
             </form>
           </ld-card>

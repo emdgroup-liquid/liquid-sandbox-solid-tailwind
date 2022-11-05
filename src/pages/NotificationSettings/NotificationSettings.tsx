@@ -76,9 +76,17 @@ const NotificationSettings: Component = () => {
             Notification Settings
           </ld-typo>
 
-          <ld-typo class="mb-6">
+          <ld-typo class="mb-2">
             We will send you a notification Email to your account Email address
             for each task reminder that you have set up.
+          </ld-typo>
+
+          <ld-typo class="mb-6">
+            You can change your email address in your{' '}
+            <ld-link onClick={() => navigate('/account-settings')}>
+              account settings
+            </ld-link>
+            .
           </ld-typo>
 
           <ld-card size="sm">

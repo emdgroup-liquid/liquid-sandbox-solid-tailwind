@@ -141,12 +141,16 @@ const Login: Component = () => {
                 <div>
                   <ld-typo variant="body-m" tag="h2">
                     Don't have an account yet?&ensp;
-                    <ld-link href="/signup">Sign&nbsp;up&nbsp;here.</ld-link>
+                    <ld-link onClick={() => navigate('/signup')}>
+                      Sign&nbsp;up&nbsp;here.
+                    </ld-link>
                   </ld-typo>
 
                   <ld-typo>
                     Problems signing in?&ensp;
-                    <ld-link href="/recover">Recover your account.</ld-link>
+                    <ld-link onClick={() => navigate('/recover')}>
+                      Recover your account.
+                    </ld-link>
                   </ld-typo>
                 </div>
               </div>

@@ -1,8 +1,8 @@
 import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
+import PasswordRating from '../../components/PasswordRating/PasswordRating'
 import TextInput from '../../components/TextInput/TextInput'
 import { createUser, getSession, userExists } from '../../services/user'
-import { getPasswordRating, getPasswordScore } from './passwordScore'
 import { useNavigate } from '@solidjs/router'
 import { createFormControl } from 'solid-forms'
 import {
@@ -71,7 +71,6 @@ const SignUp: Component = () => {
   const steps = ['Enter your Email', 'Set password']
   const [currentStep, setCurrentStep] = createSignal(0)
   const [isSubmitted, setIsSubmitted] = createSignal(false)
-  const [passwordRating, setPasswordRating] = createSignal('poop')
   const stepsDoneIndices: number[] = []
   if (localStorage.getItem('user_signup_email')) stepsDoneIndices.push(0)
   const [stepsDone, setStepsDone] = createSignal(new Set(stepsDoneIndices))
@@ -83,10 +82,6 @@ const SignUp: Component = () => {
       navigate('/todo', { replace: true })
     }
     setLoading(false)
-  })
-
-  createEffect(() => {
-    setPasswordRating(getPasswordRating(passwordControl.value))
   })
 
   const onSubmitEmail = async () => {
@@ -248,52 +243,10 @@ const SignUp: Component = () => {
                         type="password"
                       />
 
-                      <div
+                      <PasswordRating
                         class="flex flex-wrap transition-opacity items-baseline -mt-ld-16"
-                        classList={
-                          {
-                            // hidden: !passwordControl.value,
-                          }
-                        }
-                        style={{
-                          '--password-rating-col': (() => {
-                            switch (passwordRating()) {
-                              case 'strong':
-                                return 'var(--ld-col-rg)'
-                              case 'good':
-                                return 'var(--ld-col-vg)'
-                              case 'weak':
-                                return 'var(--ld-col-vy)'
-                              default:
-                                return 'var(--ld-col-rr)'
-                            }
-                          })(),
-                        }}
-                      >
-                        <ld-typo variant="body-s" class="mr-ld-12">
-                          Password strengh:
-                        </ld-typo>
-                        <ld-progress
-                          class="flex-grow mb-ld-4"
-                          style={{
-                            '--ld-progress-bar-col':
-                              'var(--password-rating-col)',
-                          }}
-                          aria-label={passwordRating()}
-                          aria-valuenow={Math.min(
-                            100,
-                            getPasswordScore(passwordControl.value)
-                          )}
-                          // steps
-                        ></ld-progress>
-                        <ld-typo
-                          aria-hidden="true"
-                          class="w-full text-right h-0 capitalize"
-                          variant="label-s"
-                        >
-                          {passwordRating()}
-                        </ld-typo>
-                      </div>
+                        passwordValue={passwordControl.value}
+                      />
                     </Match>
                   </Switch>
 
@@ -318,7 +271,7 @@ const SignUp: Component = () => {
                 <Show when={currentStep() === steps.length - 1}>
                   <ld-typo id="conditions-notice" variant="body-m" tag="h2">
                     By creating an account with us, you agree to our{' '}
-                    <ld-link href="/terms">
+                    <ld-link onClick={() => navigate('/terms')}>
                       terms&nbsp;and&nbsp;conditions
                     </ld-link>
                     .
@@ -327,7 +280,10 @@ const SignUp: Component = () => {
 
                 <ld-typo variant="body-m" tag="h2" class="mb-ld-40">
                   Already have an account?&ensp;
-                  <ld-link href="/login">Log&nbsp;in&nbsp;here</ld-link>.
+                  <ld-link onClick={() => navigate('/login')}>
+                    Log&nbsp;in&nbsp;here
+                  </ld-link>
+                  .
                 </ld-typo>
               </div>
 

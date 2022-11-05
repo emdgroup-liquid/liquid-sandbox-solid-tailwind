@@ -79,6 +79,7 @@ const AddTodo: Component<AddTodoProps> = (props) => {
       style={props.style}
     >
       <form
+        aria-label="Add task"
         class="grid w-full grid-cols-2 gap-ld-12"
         noValidate
         onSubmit={onSubmit}

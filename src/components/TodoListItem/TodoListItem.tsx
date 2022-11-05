@@ -305,6 +305,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
       >
         <ld-typo slot="header">When do you want to be reminded?</ld-typo>
         <form
+          aria-label="Set reminder date and time"
           ref={(el) => (customReminderFormRef = el)}
           onSubmit={onSubmitCustomReminder}
         >
