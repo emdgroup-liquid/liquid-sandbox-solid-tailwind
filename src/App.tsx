@@ -1,6 +1,8 @@
 import BreakpointHelper from './components/BreakpointHelper/BreakpointHelper'
 import CookieConsent from './components/CookieConsent/CookieConsent'
 import Footer from './components/Footer/Footer'
+import Sidenav from './components/Sidenav/Sidenav'
+import { loadComponents } from './liquidLoader'
 import AccountSettings from './pages/AccountSettings/AccountSettings'
 import Home from './pages/Home/Home'
 import Login from './pages/Login/Login'
@@ -10,10 +12,39 @@ import Recover from './pages/Recover/Recover'
 import SignUp from './pages/SignUp/SignUp'
 import Terms from './pages/Terms/Terms'
 import Todo from './pages/Todo/Todo'
-import { Routes, Route } from '@solidjs/router'
-import { Show, type Component } from 'solid-js'
+import { todos } from './services/todo'
+import { parsePath } from './utils/path'
+import { Outlet, Routes, Route, useLocation } from '@solidjs/router'
+import { Show, type Component, createMemo } from 'solid-js'
 
 const App: Component = () => {
+  loadComponents([
+    'ld-accordion',
+    'ld-accordion-section',
+    'ld-accordion-toggle',
+    'ld-accordion-panel',
+    'ld-button',
+    'ld-cookie-consent',
+    'ld-icon',
+    'ld-link',
+    'ld-modal',
+    'ld-notification',
+    'ld-toggle',
+    'ld-typo',
+  ])
+
+  function TodoWrapper() {
+    const location = useLocation()
+    const pathname = createMemo(() => parsePath(location.pathname))
+
+    return (
+      <div class="w-full min-h-screen relative flex bg-neutral-010">
+        <Sidenav todos={todos} pathname={pathname} />
+        <Todo />
+      </div>
+    )
+  }
+
   return (
     <div class="flex flex-col min-h-screen">
       <Show when={import.meta.env.VITE_ENV === 'development'}>
@@ -24,9 +55,9 @@ const App: Component = () => {
         <Routes>
           <Route path="/" component={Home} />
           <Route path="/todo">
-            <Route path="/" component={Todo} />
-            <Route path="/due-today" component={Todo} />
-            <Route path="/done" component={Todo} />
+            <Route path="/" component={TodoWrapper} />
+            <Route path="/due-today" component={TodoWrapper} />
+            <Route path="/done" component={TodoWrapper} />
           </Route>
           <Route path="/login" component={Login} />
           <Route path="/recover" component={Recover} />

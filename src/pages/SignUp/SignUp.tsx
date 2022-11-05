@@ -2,6 +2,7 @@ import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
 import PasswordRating from '../../components/PasswordRating/PasswordRating'
 import TextInput from '../../components/TextInput/TextInput'
+import { loadComponents } from '../../liquidLoader'
 import { createUser, getSession, userExists } from '../../services/user'
 import { useNavigate } from '@solidjs/router'
 import { createFormControl } from 'solid-forms'
@@ -45,6 +46,16 @@ const SignUpStep: Component<{
 }
 
 const SignUp: Component = () => {
+  loadComponents([
+    'ld-typo',
+    'ld-button',
+    'ld-link',
+    'ld-loading',
+    'ld-stepper',
+    'ld-step',
+    'ld-typo',
+  ])
+
   const navigate = useNavigate()
   let formRef: HTMLFormElement
 
@@ -168,7 +179,7 @@ const SignUp: Component = () => {
   return (
     <div class="flex w-full">
       <Aside>
-        <Logo tag="div" href="/" class="mb-ld-40" />
+        <Logo class="mb-ld-40" />
 
         <Show when={!loading()}>
           <>
@@ -201,11 +212,7 @@ const SignUp: Component = () => {
         <div class="container flex-grow mx-auto relative max-w-2xl flex flex-col">
           <Show when={!loading()} fallback={<ld-loading class="m-auto" />}>
             <>
-              <Logo
-                tag="div"
-                href="/"
-                class="mb-ld-16 self-start block lg:hidden"
-              />
+              <Logo class="mb-ld-16 self-start block lg:hidden" />
 
               <div class="my-auto">
                 <ld-typo variant="h1" class="block mb-ld-40">
@@ -226,7 +233,7 @@ const SignUp: Component = () => {
                         autofocus
                         control={emailControl}
                         label="Email"
-                        name="name"
+                        name="email"
                         tone="dark"
                         type="email"
                       />
@@ -238,7 +245,7 @@ const SignUp: Component = () => {
                         autofocus
                         control={passwordControl}
                         label="Password"
-                        name="name"
+                        name="password"
                         tone="dark"
                         type="password"
                       />

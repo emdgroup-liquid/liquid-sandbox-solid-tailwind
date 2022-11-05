@@ -1,4 +1,5 @@
 import breakpoints from '../../breakpoints'
+import { loadComponents } from '../../liquidLoader'
 import { deleteSession } from '../../services/user'
 import Logo from '../Logo/Logo'
 import { useNavigate } from '@solidjs/router'
@@ -17,6 +18,23 @@ interface SidenavProps {
 }
 
 const Sidenav: Component<SidenavProps> = (props) => {
+  const [sidenavLoaded, setSidenavLoaded] = createSignal(false)
+  loadComponents([
+    'ld-badge',
+    'ld-icon',
+    'ld-label',
+    'ld-loading',
+    'ld-sidenav',
+    'ld-sidenav-header',
+    'ld-sidenav-heading',
+    'ld-sidenav-navitem',
+    'ld-sidenav-slider',
+    'ld-sidenav-toggle-outside',
+    'ld-sr-only',
+  ]).then(() => {
+    setSidenavLoaded(true)
+  })
+
   let sidenavRef: HTMLLdSidenavElement
 
   const navigate = useNavigate()
@@ -50,7 +68,12 @@ const Sidenav: Component<SidenavProps> = (props) => {
   })
 
   return (
-    <>
+    <Show
+      when={sidenavLoaded()}
+      fallback={
+        <div class="lg:relative shrink-0" style={{ width: '15.625rem' }} />
+      }
+    >
       <ld-sidenav-toggle-outside class="z-10" />
       <ld-sidenav
         breakpoint={breakpoints.xs}
@@ -69,9 +92,8 @@ const Sidenav: Component<SidenavProps> = (props) => {
             class="leading-7"
             slot="logo"
             style={{ width: '10rem' }}
-            tag="span"
             variant="b6"
-            href={'/todo'}
+            to="/todo"
           />
         </ld-sidenav-header>
         <ld-sidenav-slider label="To-Do">
@@ -152,6 +174,7 @@ const Sidenav: Component<SidenavProps> = (props) => {
                 <svg
                   style={{
                     transform: 'translateY(-3.5%) scale(0.8)',
+                    visibility: sidenavLoaded() ? 'inherit' : 'hidden',
                   }}
                   viewBox="0 0 512 512"
                 >
@@ -173,7 +196,7 @@ const Sidenav: Component<SidenavProps> = (props) => {
         </ld-sidenav-navitem>
       </ld-sidenav>
       <div class="hidden xs:block lg:hidden" style={{ width: '4rem' }} />
-    </>
+    </Show>
   )
 }
 

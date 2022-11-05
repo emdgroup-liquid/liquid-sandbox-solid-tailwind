@@ -1,6 +1,7 @@
 import PasswordRating from '../../components/PasswordRating/PasswordRating'
 import Sidenav from '../../components/Sidenav/Sidenav'
 import TextInput from '../../components/TextInput/TextInput'
+import { loadComponents } from '../../liquidLoader'
 import { initStore as initSettingsStore } from '../../services/settings'
 import { initStore as initTodoStore, todos } from '../../services/todo'
 import { deleteUser, getSession, updateUser } from '../../services/user'
@@ -16,6 +17,16 @@ import {
 } from 'solid-js'
 
 const AccountSettings: Component = () => {
+  loadComponents([
+    'ld-button',
+    'ld-card',
+    'ld-link',
+    'ld-loading',
+    'ld-modal',
+    'ld-tooltip',
+    'ld-typo',
+  ])
+
   let confirmDeleteModalRef: HTMLLdModalElement
   let emailFormRef: HTMLFormElement
   let passwordFormRef: HTMLFormElement
@@ -209,7 +220,7 @@ const AccountSettings: Component = () => {
                 autofocus
                 control={emailControl}
                 label="Email"
-                name="name"
+                name="email"
                 tone="dark"
                 type="email"
                 tooltip={
@@ -259,7 +270,7 @@ const AccountSettings: Component = () => {
                   autofocus
                   control={passwordControl}
                   label="New password"
-                  name="name"
+                  name="password"
                   tone="dark"
                   type="password"
                 />

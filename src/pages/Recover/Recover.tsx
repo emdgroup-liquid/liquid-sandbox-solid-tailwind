@@ -1,12 +1,15 @@
 import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
 import TextInput from '../../components/TextInput/TextInput'
+import { loadComponents } from '../../liquidLoader'
 import { getSession } from '../../services/user'
 import { useNavigate } from '@solidjs/router'
 import { createFormGroup, createFormControl } from 'solid-forms'
 import { createEffect, createSignal, Show, type Component } from 'solid-js'
 
 const Recover: Component = () => {
+  loadComponents(['ld-typo', 'ld-button', 'ld-link', 'ld-loading', 'ld-typo'])
+
   const navigate = useNavigate()
   let formRef: HTMLFormElement
 
@@ -62,7 +65,7 @@ const Recover: Component = () => {
   return (
     <div class="flex w-full">
       <Aside>
-        <Logo tag="div" href="/" class="mb-ld-16" />
+        <Logo class="mb-ld-16" />
       </Aside>
 
       <main
@@ -73,11 +76,7 @@ const Recover: Component = () => {
         <div class="container flex-grow mx-auto relative max-w-2xl flex flex-col">
           <Show when={!loading()} fallback={<ld-loading class="m-auto" />}>
             <>
-              <Logo
-                tag="div"
-                href="/"
-                class="mb-ld-16 self-start block lg:hidden"
-              />
+              <Logo class="mb-ld-16 self-start block lg:hidden" />
 
               <div class="my-auto" role="region" aria-live="polite">
                 <Show
@@ -117,7 +116,7 @@ const Recover: Component = () => {
                       autocomplete="email"
                       control={group.controls.email}
                       label="Account email"
-                      name="name"
+                      name="email"
                       tone="dark"
                       type="email"
                     />

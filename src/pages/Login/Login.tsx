@@ -1,12 +1,15 @@
 import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
 import TextInput from '../../components/TextInput/TextInput'
+import { loadComponents } from '../../liquidLoader'
 import { getSession, loginUser } from '../../services/user'
 import { useNavigate } from '@solidjs/router'
 import { createFormGroup, createFormControl } from 'solid-forms'
 import { createEffect, createSignal, Show, type Component } from 'solid-js'
 
 const Login: Component = () => {
+  loadComponents(['ld-typo', 'ld-button', 'ld-link', 'ld-loading', 'ld-typo'])
+
   const navigate = useNavigate()
   let formRef: HTMLFormElement
 
@@ -78,7 +81,7 @@ const Login: Component = () => {
   return (
     <div class="flex w-full">
       <Aside>
-        <Logo tag="div" href="/" class="mb-ld-16" />
+        <Logo to="/" class="mb-ld-16" />
       </Aside>
 
       <main
@@ -89,11 +92,7 @@ const Login: Component = () => {
         <div class="container flex-grow mx-auto relative max-w-2xl flex flex-col">
           <Show when={!loading()} fallback={<ld-loading class="m-auto" />}>
             <>
-              <Logo
-                tag="div"
-                href="/"
-                class="mb-ld-16 self-start block lg:hidden"
-              />
+              <Logo class="mb-ld-16 self-start block lg:hidden" />
 
               <div class="my-auto">
                 <ld-typo variant="h1" class="block mb-ld-40">

@@ -1,21 +1,20 @@
 import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
+import { loadComponents } from '../../liquidLoader'
 import { type Component } from 'solid-js'
 
 const Privacy: Component = () => {
+  loadComponents(['ld-typo'])
+
   return (
     <div class="flex w-full max-h-screen">
       <Aside>
-        <Logo tag="div" href="/" class="mb-ld-16" />
+        <Logo class="mb-ld-16" />
       </Aside>
 
       <main class="flex flex-grow justify-center px-ld-24 py-ld-40 min-h-screen sm:px-ld-40 lg:min-h-fit overflow-auto">
         <div class="container flex-grow mx-auto relative max-w-2xl flex flex-col">
-          <Logo
-            tag="div"
-            href="/"
-            class="mb-ld-16 self-start block lg:hidden"
-          />
+          <Logo class="mb-ld-16 self-start block lg:hidden" />
 
           <div class="mb-auto pb-24">
             <ld-typo variant="h1" class="block my-ld-40">

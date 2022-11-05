@@ -1,3 +1,4 @@
+import { loadComponents } from '../../liquidLoader'
 import TextInput from '../TextInput/TextInput'
 import './TodoListItem.css'
 import { useNavigate } from '@solidjs/router'
@@ -10,6 +11,7 @@ import {
   type JSX,
   onCleanup,
   onMount,
+  Show,
 } from 'solid-js'
 
 interface AddTodoProps {
@@ -22,6 +24,26 @@ interface AddTodoProps {
 }
 
 const TodoListItem: Component<AddTodoProps> = (props) => {
+  const [componentsLoaded, setComponentsLoaded] = createSignal(false)
+  loadComponents([
+    'ld-accordion',
+    'ld-accordion-panel',
+    'ld-accordion-section',
+    'ld-accordion-toggle',
+    'ld-button',
+    'ld-card',
+    'ld-checkbox',
+    'ld-input',
+    'ld-label',
+    'ld-modal',
+    'ld-option',
+    'ld-option-internal',
+    'ld-select',
+    'ld-typo',
+  ]).then(() => {
+    setComponentsLoaded(true)
+  })
+
   let checkLabelRef: HTMLLabelElement
   let checkRef: HTMLLdCheckboxElement
   let confirmDeleteModalRef: HTMLLdModalElement
@@ -252,7 +274,10 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
       class={props.class}
       classList={props.classList}
       role="listitem"
-      style={props.style}
+      style={{
+        ...props.style,
+        visibility: componentsLoaded() ? 'inherit' : 'hidden',
+      }}
     >
       <ld-modal
         class="[&::part(footer)]:grid-cols-1"
@@ -267,7 +292,6 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
         </ld-typo>
         <div slot="footer" class="grid grid-cols-2 gap-ld-12 w-full">
           <ld-button
-            style="width: 8rem"
             mode="ghost"
             onClick={() => {
               confirmDeleteModalRef.close()

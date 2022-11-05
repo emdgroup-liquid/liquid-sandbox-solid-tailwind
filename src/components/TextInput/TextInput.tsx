@@ -1,3 +1,4 @@
+import { loadComponents } from '../../liquidLoader'
 import '@emdgroup-liquid/liquid/dist/css/ld-input.css'
 import { createFormControl, IFormControl } from 'solid-forms'
 import {
@@ -31,6 +32,14 @@ interface TextInputProps {
 }
 
 const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
+  loadComponents([
+    'ld-icon',
+    'ld-button',
+    'ld-label',
+    'ld-input-message',
+    'ld-progress',
+  ])
+
   // Provide a default form control in case the user doesn't supply one.
   props = mergeProps({ control: createFormControl('') }, props)
   if (!props.control) return ''

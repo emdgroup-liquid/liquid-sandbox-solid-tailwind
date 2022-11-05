@@ -1,7 +1,10 @@
 import Logo from '../../components/Logo/Logo'
+import { loadComponents } from '../../liquidLoader'
 import { type Component } from 'solid-js'
 
 const Home: Component = () => {
+  loadComponents(['ld-bg-cells', 'ld-button', 'ld-icon', 'ld-typo'])
+
   return (
     <>
       <main class="container mx-auto px-ld-24 pt-ld-40 pb-24 relative max-w-2xl">

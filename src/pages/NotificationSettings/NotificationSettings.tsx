@@ -1,4 +1,5 @@
 import Sidenav from '../../components/Sidenav/Sidenav'
+import { loadComponents } from '../../liquidLoader'
 import {
   initStore as initSettingsStore,
   settings,
@@ -17,6 +18,17 @@ import {
 } from 'solid-js'
 
 const NotificationSettings: Component = () => {
+  loadComponents([
+    'ld-button',
+    'ld-card',
+    'ld-link',
+    'ld-loading',
+    'ld-modal',
+    'ld-tooltip',
+    'ld-toggle',
+    'ld-typo',
+  ])
+
   const navigate = useNavigate()
 
   const [loading, setLoading] = createSignal(true)
