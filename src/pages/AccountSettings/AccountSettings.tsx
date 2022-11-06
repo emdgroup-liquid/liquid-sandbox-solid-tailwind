@@ -304,9 +304,6 @@ const AccountSettings: Component = () => {
             </div>
             <ld-modal
               class="[&::part(footer)]:grid-cols-1"
-              onLdmodalclosed={() => {
-                // TODO: set focus
-              }}
               ref={(el: HTMLLdModalElement) => (confirmDeleteModalRef = el)}
             >
               <ld-typo slot="header">Are you sure?</ld-typo>

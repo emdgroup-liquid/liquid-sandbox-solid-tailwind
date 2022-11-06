@@ -16,19 +16,20 @@ interface TextInputProps {
   class?: string
   classList?: { [k: string]: boolean | undefined }
   control?: IFormControl
-  label: string | JSX.Element
-  name?: string
-  ref?: (el: HTMLElement) => void
-  placeholder?: string
-  size?: 'sm' | 'lg'
-  type?: string
-  min?: string
-  tone?: 'dark'
-  spellcheck?: boolean
-  successMessage?: string | JSX.Element
   iconStart?: JSX.Element
   iconEnd?: JSX.Element
+  inputRef?: (el: HTMLInputElement) => void
+  label: string | JSX.Element
+  min?: string
+  name?: string
+  placeholder?: string
+  ref?: (el: HTMLElement) => void
+  size?: 'sm' | 'lg'
+  spellcheck?: boolean
+  successMessage?: string | JSX.Element
+  tone?: 'dark'
   tooltip?: JSX.Element
+  type?: string
 }
 
 const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
@@ -98,7 +99,10 @@ const TextInput: Component<TextInputProps> = (props: TextInputProps) => {
             props.control?.setValue(eventTarget.value || '')
           }}
           placeholder={props.placeholder}
-          ref={(el) => (inputRef = el)}
+          ref={(el) => {
+            inputRef = el
+            props.inputRef?.call(this, el)
+          }}
           required={props.control.isRequired}
           spellcheck={!!props.spellcheck}
           type={

@@ -6,6 +6,7 @@ import { JSX, type Component } from 'solid-js'
 interface AddTodoProps {
   class?: string
   classList?: { [k: string]: boolean | undefined }
+  inputRef?: (el: HTMLInputElement) => void
   style?: JSX.CSSProperties
   createTodo: (todo: Omit<Todo, 'id' | 'createdAt'>) => Promise<void>
 }
@@ -70,15 +71,16 @@ const AddTodo: Component<AddTodoProps> = (props) => {
     if (isTodoCreated) {
       formRef.reset()
       addTodoInputRef.querySelector('input')?.focus()
+      group.controls.task.markTouched(false)
     }
     group.markSubmitted(false)
   }
 
   return (
     <ld-card
-      size="sm"
       class={props.class}
       classList={props.classList}
+      size="sm"
       style={props.style}
     >
       <form
@@ -90,6 +92,7 @@ const AddTodo: Component<AddTodoProps> = (props) => {
       >
         <TextInput
           ref={(el: HTMLElement) => (addTodoInputRef = el)}
+          inputRef={props.inputRef}
           control={group.controls.task}
           label="Add a task"
           class="col-span-2"

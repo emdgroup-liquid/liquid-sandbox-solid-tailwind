@@ -29,6 +29,7 @@ const Todo: Component = () => {
   loadComponents(['ld-loading', 'ld-typo'])
 
   let mainRef: HTMLElement
+  let addTodoInputRef: HTMLInputElement
   const navigate = useNavigate()
 
   const [loading, setLoading] = createSignal(true)
@@ -95,7 +96,11 @@ const Todo: Component = () => {
               <Match when={pathname() === '/todo/done'}>Done</Match>
             </Switch>
           </ld-typo>
-          <AddTodo createTodo={createTodo} class="w-full mb-ld-16" />
+          <AddTodo
+            inputRef={(el: HTMLInputElement) => (addTodoInputRef = el)}
+            createTodo={createTodo}
+            class="w-full mb-ld-16"
+          />
         </>
 
         <Show
@@ -125,6 +130,7 @@ const Todo: Component = () => {
                     <TodoListItem
                       class="w-full mb-ld-12 todo-list-item"
                       deleteTodo={deleteTodo}
+                      onDelete={() => addTodoInputRef.focus()}
                       updateTodo={updateTodo}
                       todo={todo}
                     />

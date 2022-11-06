@@ -11,16 +11,16 @@ import {
   type JSX,
   onCleanup,
   onMount,
-  Show,
 } from 'solid-js'
 
 interface AddTodoProps {
   class?: string
   classList?: { [k: string]: boolean | undefined }
-  style?: JSX.CSSProperties
-  todo: Todo
   deleteTodo: (todoId: string) => Promise<void>
+  onDelete: () => void
+  style?: JSX.CSSProperties
   updateTodo: (todo: Omit<Todo, 'createdAt'>) => Promise<void>
+  todo: Todo
 }
 
 const TodoListItem: Component<AddTodoProps> = (props) => {
@@ -49,6 +49,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
   let confirmDeleteModalRef: HTMLLdModalElement
   let customReminderFormRef: HTMLFormElement
   let customReminderModalRef: HTMLLdModalElement
+  let selectReminderRef: HTMLLdSelectElement
   const [deleting, setDeleting] = createSignal(false)
 
   const navigate = useNavigate()
@@ -281,9 +282,6 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
     >
       <ld-modal
         class="[&::part(footer)]:grid-cols-1"
-        onLdmodalclosed={() => {
-          // TODO: set focus
-        }}
         ref={(el: HTMLLdModalElement) => (confirmDeleteModalRef = el)}
       >
         <ld-typo slot="header">Are you sure?</ld-typo>
@@ -304,6 +302,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
             onClick={async () => {
               await deleteTodo()
               confirmDeleteModalRef.close()
+              props.onDelete()
             }}
             progress={deleting() ? 'pending' : undefined}
           >
@@ -314,7 +313,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
       <ld-modal
         class="[&::part(footer)]:grid-cols-1"
         onLdmodalclosed={() => {
-          // TODO: set focus
+          selectReminderRef.focusInner()
         }}
         onLdmodalclosing={() => {
           setReminderOptions((s) =>
@@ -456,6 +455,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
                   </ld-tooltip>
                 </span>
                 <ld-select
+                  multiple
                   onLdchange={(ev) => {
                     const compareBefore = JSON.stringify(
                       reminderOptions()
@@ -493,7 +493,7 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
                     }
                   }}
                   placeholder="No reminders"
-                  multiple
+                  ref={(el: HTMLLdSelectElement) => (selectReminderRef = el)}
                 >
                   <For each={reminderOptions()}>
                     {(option) => (
