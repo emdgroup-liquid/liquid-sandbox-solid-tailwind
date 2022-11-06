@@ -23,7 +23,7 @@ const Logo: Component<LogoProps> = (props) => {
         [`ld-typo ld-typo--${props.variant || 'b5'}`]: true,
       }}
       slot={props.slot}
-      style={props.style}
+      style={{ ...props.style, 'line-height': '0.66' }}
     >
       <a
         onClick={(ev) => {
