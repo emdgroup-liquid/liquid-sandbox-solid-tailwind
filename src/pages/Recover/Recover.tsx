@@ -78,7 +78,7 @@ const Recover: Component = () => {
             <>
               <Logo class="mb-ld-16 self-start block lg:hidden" />
 
-              <div class="my-auto" role="region" aria-live="polite">
+              <div class="my-auto py-ld-32" role="region" aria-live="polite">
                 <Show
                   when={!recoveryPending()}
                   fallback={

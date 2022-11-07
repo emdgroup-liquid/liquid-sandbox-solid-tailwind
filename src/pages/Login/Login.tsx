@@ -94,7 +94,7 @@ const Login: Component = () => {
             <>
               <Logo class="mb-ld-16 self-start block lg:hidden" />
 
-              <div class="my-auto">
+              <div class="my-auto py-ld-32">
                 <ld-typo variant="h1" class="block mb-ld-40">
                   Login
                 </ld-typo>
