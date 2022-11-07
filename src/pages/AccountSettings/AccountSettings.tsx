@@ -1,20 +1,12 @@
 import PasswordRating from '../../components/PasswordRating/PasswordRating'
-import Sidenav from '../../components/Sidenav/Sidenav'
 import TextInput from '../../components/TextInput/TextInput'
 import { loadComponents } from '../../liquidLoader'
 import { initStore as initSettingsStore } from '../../services/settings'
-import { initStore as initTodoStore, todos } from '../../services/todo'
+import { initStore as initTodoStore } from '../../services/todo'
 import { deleteUser, getSession, updateUser } from '../../services/user'
-import { parsePath } from '../../utils/path'
-import { useLocation, useNavigate } from '@solidjs/router'
+import { useNavigate } from '@solidjs/router'
 import { createFormControl } from 'solid-forms'
-import {
-  createEffect,
-  createMemo,
-  createSignal,
-  Show,
-  type Component,
-} from 'solid-js'
+import { createEffect, createSignal, Show, type Component } from 'solid-js'
 
 const AccountSettings: Component = () => {
   loadComponents([
@@ -36,9 +28,6 @@ const AccountSettings: Component = () => {
   const [loading, setLoading] = createSignal(true)
 
   const [deleting, setDeleting] = createSignal(false)
-
-  const location = useLocation()
-  const pathname = createMemo(() => parsePath(location.pathname))
 
   const emailControl = createFormControl('', {
     required: true,

@@ -1,21 +1,13 @@
-import Sidenav from '../../components/Sidenav/Sidenav'
 import { loadComponents } from '../../liquidLoader'
 import {
   initStore as initSettingsStore,
   settings,
   updateSettings,
 } from '../../services/settings'
-import { initStore as initTodoStore, todos } from '../../services/todo'
+import { initStore as initTodoStore } from '../../services/todo'
 import { getSession } from '../../services/user'
-import { parsePath } from '../../utils/path'
-import { useLocation, useNavigate } from '@solidjs/router'
-import {
-  createEffect,
-  createMemo,
-  createSignal,
-  Show,
-  type Component,
-} from 'solid-js'
+import { useNavigate } from '@solidjs/router'
+import { createEffect, createSignal, Show, type Component } from 'solid-js'
 
 const NotificationSettings: Component = () => {
   loadComponents([
@@ -32,9 +24,6 @@ const NotificationSettings: Component = () => {
   const navigate = useNavigate()
 
   const [loading, setLoading] = createSignal(true)
-
-  const location = useLocation()
-  const pathname = createMemo(() => parsePath(location.pathname))
 
   createEffect(async () => {
     if (!(await getSession())) {
