@@ -195,7 +195,7 @@ const Sidenav: Component<SidenavProps> = (props) => {
           Log out
         </ld-sidenav-navitem>
       </ld-sidenav>
-      <div class="hidden xs:block lg:hidden" style={{ width: '4rem' }} />
+      <div class="hidden shrink-0 xs:block lg:hidden w-[4rem]" />
     </Show>
   )
 }
