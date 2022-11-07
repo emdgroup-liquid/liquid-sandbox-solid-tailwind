@@ -40,7 +40,7 @@ const App: Component = () => {
     return (
       <div class="w-full min-h-screen relative flex bg-neutral-010">
         <Sidenav todos={todos} pathname={pathname} />
-        <Todo />
+        <Outlet />
       </div>
     )
   }
@@ -54,10 +54,10 @@ const App: Component = () => {
       <div class="relative flex items-center flex-grow">
         <Routes>
           <Route path="/" component={Home} />
-          <Route path="/todo">
-            <Route path="/" component={TodoWrapper} />
-            <Route path="/due-today" component={TodoWrapper} />
-            <Route path="/done" component={TodoWrapper} />
+          <Route path="/todo" component={TodoWrapper}>
+            <Route path="/" component={Todo} />
+            <Route path="/due-today" component={Todo} />
+            <Route path="/done" component={Todo} />
           </Route>
           <Route path="/login" component={Login} />
           <Route path="/recover" component={Recover} />
