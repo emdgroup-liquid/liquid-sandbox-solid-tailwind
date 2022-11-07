@@ -18,20 +18,7 @@ import { Outlet, Routes, Route, useLocation } from '@solidjs/router'
 import { Show, type Component, createMemo } from 'solid-js'
 
 const App: Component = () => {
-  loadComponents([
-    'ld-accordion',
-    'ld-accordion-section',
-    'ld-accordion-toggle',
-    'ld-accordion-panel',
-    'ld-button',
-    'ld-cookie-consent',
-    'ld-icon',
-    'ld-link',
-    'ld-modal',
-    'ld-notification',
-    'ld-toggle',
-    'ld-typo',
-  ])
+  loadComponents(['ld-notification'])
 
   function WithSidenav() {
     const location = useLocation()

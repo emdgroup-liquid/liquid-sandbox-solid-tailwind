@@ -268,6 +268,18 @@ const AccountSettings: Component = () => {
           </form>
         </ld-card>
 
+        <ld-card class="mb-ld-16" size="sm">
+          <ld-button
+            id="update-cookie-settings-button"
+            class="self-start w-full sm:w-auto"
+            onClick={() => {
+              document.querySelector('ld-cookie-consent')?.showDisclaimer()
+            }}
+          >
+            Update Cookie Settings
+          </ld-button>
+        </ld-card>
+
         <ld-card size="sm">
           <ld-typo tag="h2" class="text-thm-error mb-ld-12" variant="h4">
             Danger zone

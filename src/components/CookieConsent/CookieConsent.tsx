@@ -1,6 +1,24 @@
-import { type Component } from 'solid-js'
+import { loadComponents } from '../../liquidLoader'
+import { type Component, onCleanup, onMount } from 'solid-js'
 
 const Aside: Component = () => {
+  loadComponents([
+    'ld-accordion',
+    'ld-accordion-section',
+    'ld-accordion-toggle',
+    'ld-accordion-panel',
+    'ld-button',
+    'ld-cookie-consent',
+    'ld-icon',
+    'ld-link',
+    'ld-modal',
+    'ld-notification',
+    'ld-toggle',
+    'ld-typo',
+  ])
+
+  let cookieConsentRef: HTMLLdCookieConsentElement
+
   const settings = {
     categories: [
       {
@@ -70,7 +88,28 @@ const Aside: Component = () => {
     privacyStatementURL: '/privacy',
   }
 
-  return <ld-cookie-consent settings={settings} />
+  const setFocus = () => {
+    document
+      .querySelector<HTMLLdButtonElement>('#update-cookie-settings-button')
+      ?.focusInner()
+  }
+
+  onMount(async () => {
+    cookieConsentRef.addEventListener('ldCookieConsentSave', setFocus, {
+      passive: true,
+    })
+  })
+
+  onCleanup(() => {
+    cookieConsentRef.removeEventListener('ldCookieConsentSave', setFocus)
+  })
+
+  return (
+    <ld-cookie-consent
+      ref={(el: HTMLLdCookieConsentElement) => (cookieConsentRef = el)}
+      settings={settings}
+    />
+  )
 }
 
 export default Aside
