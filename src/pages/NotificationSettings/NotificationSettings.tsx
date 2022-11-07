@@ -73,44 +73,41 @@ const NotificationSettings: Component = () => {
   }
 
   return (
-    <div class="w-full min-h-screen relative flex bg-neutral-010">
-      <Sidenav todos={todos} pathname={pathname} />
-      <main
-        aria-busy={loading()}
-        aria-live="polite"
-        class="flex flex-col max-w-[max(80vw,_80rem)] mx-auto px-ld-24 py-ld-40 relative h-screen flex-grow overflow-auto"
-      >
-        <Show when={!loading()} fallback={<ld-loading class="m-auto" />}>
-          <ld-typo variant="h2" tag="h1" class="mt-6 xs:mt-1 mb-6">
-            Notification Settings
-          </ld-typo>
+    <main
+      aria-busy={loading()}
+      aria-live="polite"
+      class="flex flex-col max-w-[max(80vw,_80rem)] mx-auto px-ld-24 py-ld-40 relative h-screen flex-grow overflow-auto"
+    >
+      <Show when={!loading()} fallback={<ld-loading class="m-auto" />}>
+        <ld-typo variant="h2" tag="h1" class="mt-6 xs:mt-1 mb-6">
+          Notification Settings
+        </ld-typo>
 
-          <ld-typo class="mb-2">
-            We will send you a notification Email to your account Email address
-            for each task reminder that you have set up.
-          </ld-typo>
+        <ld-typo class="mb-2">
+          We will send you a notification Email to your account Email address
+          for each task reminder that you have set up.
+        </ld-typo>
 
-          <ld-typo class="mb-6">
-            You can change your email address in your{' '}
-            <ld-link onClick={() => navigate('/account-settings')}>
-              account settings
-            </ld-link>
-            .
-          </ld-typo>
+        <ld-typo class="mb-6">
+          You can change your email address in your{' '}
+          <ld-link onClick={() => navigate('/account-settings')}>
+            account settings
+          </ld-link>
+          .
+        </ld-typo>
 
-          <ld-card size="sm">
-            <ld-label class="w-full" position="left" size="m">
-              I'd like to receive a notifications via email.
-              <ld-toggle
-                checked={settings.notificationsEnabled}
-                class="ml-auto"
-                onChange={update}
-              />
-            </ld-label>
-          </ld-card>
-        </Show>
-      </main>
-    </div>
+        <ld-card size="sm">
+          <ld-label class="w-full" position="left" size="m">
+            I'd like to receive a notifications via email.
+            <ld-toggle
+              checked={settings.notificationsEnabled}
+              class="ml-auto"
+              onChange={update}
+            />
+          </ld-label>
+        </ld-card>
+      </Show>
+    </main>
   )
 }
 

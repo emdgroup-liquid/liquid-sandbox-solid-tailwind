@@ -33,7 +33,7 @@ const App: Component = () => {
     'ld-typo',
   ])
 
-  function TodoWrapper() {
+  function WithSidenav() {
     const location = useLocation()
     const pathname = createMemo(() => parsePath(location.pathname))
 
@@ -54,21 +54,21 @@ const App: Component = () => {
       <div class="relative flex items-center flex-grow">
         <Routes>
           <Route path="/" component={Home} />
-          <Route path="/todo" component={TodoWrapper}>
-            <Route path="/" component={Todo} />
-            <Route path="/due-today" component={Todo} />
-            <Route path="/done" component={Todo} />
+          <Route path="/" component={WithSidenav}>
+            <Route path="/todo" component={Todo} />
+            <Route path="/todo/due-today" component={Todo} />
+            <Route path="/todo/done" component={Todo} />
+            <Route path="/account-settings" component={AccountSettings} />
+            <Route
+              path="/notification-settings"
+              component={NotificationSettings}
+            />
           </Route>
           <Route path="/login" component={Login} />
           <Route path="/recover" component={Recover} />
           <Route path="/signup" component={SignUp} />
           <Route path="/terms" component={Terms} />
           <Route path="/privacy" component={Privacy} />
-          <Route path="/account-settings" component={AccountSettings} />
-          <Route
-            path="/notification-settings"
-            component={NotificationSettings}
-          />
         </Routes>
       </div>
       <Routes>
