@@ -70,9 +70,7 @@ const Sidenav: Component<SidenavProps> = (props) => {
   return (
     <Show
       when={sidenavLoaded()}
-      fallback={
-        <div class="lg:relative shrink-0" style={{ width: '15.625rem' }} />
-      }
+      fallback={<div class="lg:relative shrink-0 w-[15.625rem]" />}
     >
       <ld-sidenav-toggle-outside class="z-10" />
       <ld-sidenav
@@ -89,9 +87,8 @@ const Sidenav: Component<SidenavProps> = (props) => {
       >
         <ld-sidenav-header href="/todo" slot="header">
           <Logo
-            class="leading-7"
+            class="leading-7 w-[10rem]"
             slot="logo"
-            style={{ width: '10rem' }}
             variant="b6"
             to="/todo"
           />

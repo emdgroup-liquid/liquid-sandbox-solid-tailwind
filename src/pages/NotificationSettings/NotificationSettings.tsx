@@ -76,12 +76,9 @@ const NotificationSettings: Component = () => {
     <div class="w-full min-h-screen relative flex bg-neutral-010">
       <Sidenav todos={todos} pathname={pathname} />
       <main
-        style={{
-          'max-width': 'max(80vw, 80rem)',
-        }}
         aria-busy={loading()}
         aria-live="polite"
-        class="flex flex-col mx-auto px-ld-24 py-ld-40 relative h-screen flex-grow overflow-auto"
+        class="flex flex-col max-w-[max(80vw,_80rem)] mx-auto px-ld-24 py-ld-40 relative h-screen flex-grow overflow-auto"
       >
         <Show when={!loading()} fallback={<ld-loading class="m-auto" />}>
           <ld-typo variant="h2" tag="h1" class="mt-6 xs:mt-1 mb-6">
