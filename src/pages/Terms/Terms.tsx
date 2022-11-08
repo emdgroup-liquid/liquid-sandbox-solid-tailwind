@@ -1,11 +1,8 @@
 import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
-import { loadComponents } from '../../liquidLoader'
 import { type Component } from 'solid-js'
 
 const Terms: Component = () => {
-  loadComponents(['ld-typo'])
-
   return (
     <div class="flex w-full max-h-screen">
       <Aside>

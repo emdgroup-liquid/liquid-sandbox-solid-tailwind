@@ -25,9 +25,4 @@ export default defineConfig({
   css: {
     postcss,
   },
-  resolve: {
-    alias: {
-      path: 'path-browserify',
-    },
-  },
 })

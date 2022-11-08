@@ -1,4 +1,3 @@
-import { loadComponents } from '../../liquidLoader'
 import TextInput from '../TextInput/TextInput'
 import './TodoListItem.css'
 import { useNavigate } from '@solidjs/router'
@@ -24,26 +23,6 @@ interface AddTodoProps {
 }
 
 const TodoListItem: Component<AddTodoProps> = (props) => {
-  const [componentsLoaded, setComponentsLoaded] = createSignal(false)
-  loadComponents([
-    'ld-accordion',
-    'ld-accordion-panel',
-    'ld-accordion-section',
-    'ld-accordion-toggle',
-    'ld-button',
-    'ld-card',
-    'ld-checkbox',
-    'ld-input',
-    'ld-label',
-    'ld-modal',
-    'ld-option',
-    'ld-option-internal',
-    'ld-select',
-    'ld-typo',
-  ]).then(() => {
-    setComponentsLoaded(true)
-  })
-
   let checkLabelRef: HTMLLabelElement
   let checkRef: HTMLLdCheckboxElement
   let confirmDeleteModalRef: HTMLLdModalElement
@@ -277,7 +256,6 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
       role="listitem"
       style={{
         ...props.style,
-        visibility: componentsLoaded() ? 'inherit' : 'hidden',
       }}
     >
       <ld-modal

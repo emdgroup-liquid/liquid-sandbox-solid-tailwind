@@ -2,7 +2,6 @@ import BreakpointHelper from './components/BreakpointHelper/BreakpointHelper'
 import CookieConsent from './components/CookieConsent/CookieConsent'
 import Footer from './components/Footer/Footer'
 import Sidenav from './components/Sidenav/Sidenav'
-import { loadComponents } from './liquidLoader'
 import AccountSettings from './pages/AccountSettings/AccountSettings'
 import Home from './pages/Home/Home'
 import Login from './pages/Login/Login'
@@ -18,8 +17,6 @@ import { Outlet, Routes, Route, useLocation } from '@solidjs/router'
 import { Show, type Component, createMemo } from 'solid-js'
 
 const App: Component = () => {
-  loadComponents(['ld-notification'])
-
   function WithSidenav() {
     const location = useLocation()
     const pathname = createMemo(() => parsePath(location.pathname))

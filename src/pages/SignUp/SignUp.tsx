@@ -2,7 +2,6 @@ import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
 import PasswordRating from '../../components/PasswordRating/PasswordRating'
 import TextInput from '../../components/TextInput/TextInput'
-import { loadComponents } from '../../liquidLoader'
 import { createUser, getSession, userExists } from '../../services/user'
 import { useNavigate } from '@solidjs/router'
 import { createFormControl } from 'solid-forms'
@@ -46,16 +45,6 @@ const SignUpStep: Component<{
 }
 
 const SignUp: Component = () => {
-  loadComponents([
-    'ld-typo',
-    'ld-button',
-    'ld-link',
-    'ld-loading',
-    'ld-stepper',
-    'ld-step',
-    'ld-typo',
-  ])
-
   const navigate = useNavigate()
   let formRef: HTMLFormElement
 

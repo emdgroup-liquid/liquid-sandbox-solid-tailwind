@@ -1,4 +1,3 @@
-import { loadComponents } from '../../liquidLoader'
 import {
   initStore as initSettingsStore,
   settings,
@@ -10,17 +9,6 @@ import { useNavigate } from '@solidjs/router'
 import { createEffect, createSignal, Show, type Component } from 'solid-js'
 
 const NotificationSettings: Component = () => {
-  loadComponents([
-    'ld-button',
-    'ld-card',
-    'ld-link',
-    'ld-loading',
-    'ld-modal',
-    'ld-tooltip',
-    'ld-toggle',
-    'ld-typo',
-  ])
-
   const navigate = useNavigate()
 
   const [loading, setLoading] = createSignal(true)

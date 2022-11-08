@@ -1,6 +1,5 @@
 import PasswordRating from '../../components/PasswordRating/PasswordRating'
 import TextInput from '../../components/TextInput/TextInput'
-import { loadComponents } from '../../liquidLoader'
 import { initStore as initSettingsStore } from '../../services/settings'
 import { initStore as initTodoStore } from '../../services/todo'
 import { deleteUser, getSession, updateUser } from '../../services/user'
@@ -9,16 +8,6 @@ import { createFormControl } from 'solid-forms'
 import { createEffect, createSignal, Show, type Component } from 'solid-js'
 
 const AccountSettings: Component = () => {
-  loadComponents([
-    'ld-button',
-    'ld-card',
-    'ld-link',
-    'ld-loading',
-    'ld-modal',
-    'ld-tooltip',
-    'ld-typo',
-  ])
-
   let confirmDeleteModalRef: HTMLLdModalElement
   let emailFormRef: HTMLFormElement
   let passwordFormRef: HTMLFormElement

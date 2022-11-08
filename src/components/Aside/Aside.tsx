@@ -1,4 +1,3 @@
-import { loadComponents } from '../../liquidLoader'
 import { type JSX, type Component } from 'solid-js'
 
 interface AsideProps {
@@ -8,8 +7,6 @@ interface AsideProps {
 }
 
 const Aside: Component<AsideProps> = (props) => {
-  loadComponents(['ld-bg-cells'])
-
   return (
     <aside
       class={

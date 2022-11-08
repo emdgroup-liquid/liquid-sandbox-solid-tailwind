@@ -1,22 +1,6 @@
-import { loadComponents } from '../../liquidLoader'
 import { type Component, onCleanup, onMount } from 'solid-js'
 
 const Aside: Component = () => {
-  loadComponents([
-    'ld-accordion',
-    'ld-accordion-section',
-    'ld-accordion-toggle',
-    'ld-accordion-panel',
-    'ld-button',
-    'ld-cookie-consent',
-    'ld-icon',
-    'ld-link',
-    'ld-modal',
-    'ld-notification',
-    'ld-toggle',
-    'ld-typo',
-  ])
-
   let cookieConsentRef: HTMLLdCookieConsentElement
 
   const settings = {

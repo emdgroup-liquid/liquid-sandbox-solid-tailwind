@@ -22,7 +22,6 @@
     "autoprefixer": "^10.4.12",
     "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
-    "path-browserify": "^1.0.1",
     "postcss": "^8.4.17",
     "prettier": "^2.7.1",
     "rollup-plugin-copy": "^3.4.0",

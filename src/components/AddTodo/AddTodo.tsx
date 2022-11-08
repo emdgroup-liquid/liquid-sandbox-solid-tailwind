@@ -1,5 +1,4 @@
 import TextInput from '../../components/TextInput/TextInput'
-import { loadComponents } from '../../liquidLoader'
 import { createFormGroup, createFormControl } from 'solid-forms'
 import { JSX, type Component } from 'solid-js'
 
@@ -12,8 +11,6 @@ interface AddTodoProps {
 }
 
 const AddTodo: Component<AddTodoProps> = (props) => {
-  loadComponents(['ld-icon', 'ld-button', 'ld-card'])
-
   let formRef: HTMLFormElement
   let addTodoInputRef: HTMLElement
 

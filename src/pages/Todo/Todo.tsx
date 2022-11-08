@@ -1,6 +1,5 @@
 import AddTodo from '../../components/AddTodo/AddTodo'
 import TodoListItem from '../../components/TodoListItem/TodoListItem'
-import { loadComponents } from '../../liquidLoader'
 import {
   createTodo,
   deleteTodo,
@@ -26,8 +25,6 @@ import {
 import { TransitionGroup } from 'solid-transition-group'
 
 const Todo: Component = () => {
-  loadComponents(['ld-loading', 'ld-typo'])
-
   let mainRef: HTMLElement
   let addTodoInputRef: HTMLInputElement
   const navigate = useNavigate()
