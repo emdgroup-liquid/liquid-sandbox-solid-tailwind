@@ -1,5 +1,5 @@
-import { JSX as LocalJSX } from '@emdgroup-liquid/liquid'
-import { JSX as SolidJSX } from 'solid-js'
+import type { JSX as LocalJSX } from '@emdgroup-liquid/liquid'
+import type { JSX as SolidJSX } from 'solid-js'
 
 type LiquidElements<T> = {
   [P in keyof T]?: T[P] & SolidJSX.HTMLAttributes<never>
