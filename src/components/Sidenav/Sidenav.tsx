@@ -35,10 +35,20 @@ const Sidenav: Component<SidenavProps> = (props) => {
     navigate('/login', { replace: true })
   }
 
+  const onNavitemClick = (path: string) => {
+    navigate(path)
+    if (isScreenNarrow()) {
+      sidenavRef.collapsed = true
+    }
+    sidenavRef.open = false
+  }
+
   const onMediaQueryChange = () => {
     const isNarrow = window.matchMedia(maxWidthQuery).matches
     setIsScreenNarrow(isNarrow)
-    if (isNarrow) sidenavRef.collapsed = true
+    if (isNarrow) {
+      sidenavRef.collapsed = true
+    }
   }
 
   onMount(async () => {
@@ -76,7 +86,7 @@ const Sidenav: Component<SidenavProps> = (props) => {
           <ld-sidenav-heading>Your tasks</ld-sidenav-heading>
           <ld-sidenav-navitem
             onClick={() => {
-              navigate('/todo')
+              onNavitemClick('/todo')
             }}
             rounded
             selected={props.pathname() === '/todo'}
@@ -90,7 +100,7 @@ const Sidenav: Component<SidenavProps> = (props) => {
           </ld-sidenav-navitem>
           <ld-sidenav-navitem
             onClick={() => {
-              navigate('/todo/due-today')
+              onNavitemClick('/todo/due-today')
             }}
             rounded
             selected={props.pathname() === '/todo/due-today'}
@@ -104,7 +114,7 @@ const Sidenav: Component<SidenavProps> = (props) => {
           </ld-sidenav-navitem>
           <ld-sidenav-navitem
             onClick={() => {
-              navigate('/todo/done')
+              onNavitemClick('/todo/done')
             }}
             rounded
             selected={props.pathname() === '/todo/done'}
@@ -120,7 +130,7 @@ const Sidenav: Component<SidenavProps> = (props) => {
           <ld-sidenav-heading>Preferences</ld-sidenav-heading>
           <ld-sidenav-navitem
             onClick={() => {
-              navigate('/notification-settings')
+              onNavitemClick('/notification-settings')
             }}
             rounded
             selected={props.pathname() === '/notification-settings'}
@@ -129,7 +139,7 @@ const Sidenav: Component<SidenavProps> = (props) => {
           </ld-sidenav-navitem>
           <ld-sidenav-navitem
             onClick={() => {
-              navigate('/account-settings')
+              onNavitemClick('/account-settings')
             }}
             rounded
             selected={props.pathname() === '/account-settings'}
