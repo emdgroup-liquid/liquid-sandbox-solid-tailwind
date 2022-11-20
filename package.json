@@ -31,7 +31,7 @@
     "vite-plugin-solid": "^2.3.0"
   },
   "dependencies": {
-    "@emdgroup-liquid/liquid": "^4.1.2",
+    "@emdgroup-liquid/liquid": "^4.1.9",
     "@solidjs/router": "^0.4.3",
     "solid-forms": "^0.4.6",
     "solid-js": "^1.5.1",
