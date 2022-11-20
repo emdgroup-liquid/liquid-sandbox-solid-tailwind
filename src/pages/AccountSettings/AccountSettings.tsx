@@ -3,6 +3,7 @@ import TextInput from '../../components/TextInput/TextInput'
 import { initStore as initSettingsStore } from '../../services/settings'
 import { initStore as initTodoStore } from '../../services/todo'
 import { deleteUser, getSession, updateUser } from '../../services/user'
+import { isEmailValid } from '../../utils/validators'
 import { useNavigate } from '@solidjs/router'
 import { createFormControl } from 'solid-forms'
 import { createEffect, createSignal, Show, type Component } from 'solid-js'
@@ -22,7 +23,7 @@ const AccountSettings: Component = () => {
     required: true,
     validators: (value: string) => {
       if (value.length === 0) return { missing: true }
-      if (!value.includes('@')) return { invalid: true }
+      if (!isEmailValid(value)) return { invalid: true }
       return null
     },
   })

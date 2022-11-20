@@ -3,6 +3,7 @@ import Logo from '../../components/Logo/Logo'
 import PasswordRating from '../../components/PasswordRating/PasswordRating'
 import TextInput from '../../components/TextInput/TextInput'
 import { createUser, getSession, userExists } from '../../services/user'
+import { isEmailValid } from '../../utils/validators'
 import { useNavigate } from '@solidjs/router'
 import { createFormControl } from 'solid-forms'
 import {
@@ -54,7 +55,7 @@ const SignUp: Component = () => {
       required: true,
       validators: (value: string) => {
         if (value.length === 0) return { missing: true }
-        if (!value.includes('@')) return { invalid: true }
+        if (!isEmailValid(value)) return { invalid: true }
         return null
       },
     }

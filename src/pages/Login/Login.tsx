@@ -2,6 +2,7 @@ import Aside from '../../components/Aside/Aside'
 import Logo from '../../components/Logo/Logo'
 import TextInput from '../../components/TextInput/TextInput'
 import { getSession, loginUser } from '../../services/user'
+import { isEmailValid } from '../../utils/validators'
 import { useNavigate } from '@solidjs/router'
 import { createFormGroup, createFormControl } from 'solid-forms'
 import { createEffect, createSignal, Show, type Component } from 'solid-js'
@@ -17,7 +18,7 @@ const Login: Component = () => {
       required: true,
       validators: (value: string) => {
         if (value.length === 0) return { missing: true }
-        if (!value.includes('@')) return { invalid: true }
+        if (!isEmailValid(value)) return { invalid: true }
         return null
       },
     }),
