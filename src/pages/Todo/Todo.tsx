@@ -79,7 +79,7 @@ const Todo: Component = () => {
     <main
       aria-busy={loading()}
       aria-live="polite"
-      class="flex flex-col max-w-[max(80vw,_80rem)] mx-auto px-ld-24 py-ld-40 relative h-screen flex-grow overflow-auto"
+      class="flex flex-col max-w-[max(80vw,_80rem)] mx-auto px-ld-24 py-ld-40 relative h-dvh flex-grow overflow-auto"
       ref={(el) => (mainRef = el)}
     >
       <Show when={!loading()} fallback={<ld-loading class="m-auto" />}>

@@ -9,9 +9,7 @@ interface AsideProps {
 const Aside: Component<AsideProps> = (props) => {
   return (
     <aside
-      class={
-        'relative min-h-screen p-ld-40 w-1/3 hidden lg:block ' + props.class
-      }
+      class={'relative min-h-dvh p-ld-40 w-1/3 hidden lg:block ' + props.class}
       classList={{ 'text-vy': true, ...(props.classList || {}) }}
     >
       {props.children}

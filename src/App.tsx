@@ -22,7 +22,7 @@ const App: Component = () => {
     const pathname = createMemo(() => parsePath(location.pathname))
 
     return (
-      <div class="w-full min-h-screen relative flex bg-neutral-010">
+      <div class="w-full min-h-dvh relative flex bg-neutral-010">
         <Sidenav todos={todos} pathname={pathname} />
         <Outlet />
       </div>
@@ -30,7 +30,7 @@ const App: Component = () => {
   }
 
   return (
-    <div class="flex flex-col min-h-screen">
+    <div class="flex flex-col min-h-dvh">
       <Show when={import.meta.env.VITE_ENV === 'development'}>
         <BreakpointHelper />
       </Show>

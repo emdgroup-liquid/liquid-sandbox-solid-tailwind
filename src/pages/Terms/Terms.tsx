@@ -4,12 +4,12 @@ import { type Component } from 'solid-js'
 
 const Terms: Component = () => {
   return (
-    <div class="flex w-full max-h-screen">
+    <div class="flex w-full max-h-dvh">
       <Aside>
         <Logo class="mb-ld-16" />
       </Aside>
 
-      <main class="flex flex-grow justify-center px-ld-24 py-ld-40 min-h-screen sm:px-ld-40 lg:min-h-fit overflow-auto">
+      <main class="flex flex-grow justify-center px-ld-24 py-ld-40 min-h-dvh sm:px-ld-40 lg:min-h-fit overflow-auto">
         <div class="container flex-grow mx-auto relative max-w-2xl flex flex-col">
           <Logo class="mb-ld-16 self-start block lg:hidden" />
 

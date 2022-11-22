@@ -197,7 +197,7 @@ const SignUp: Component = () => {
       <main
         aria-busy={loading()}
         aria-live="polite"
-        class="flex flex-grow justify-center self-center px-ld-24 py-ld-40 sm:px-ld-40 min-h-screen shadow-hover overflow-auto"
+        class="flex flex-grow justify-center self-center px-ld-24 py-ld-40 sm:px-ld-40 min-h-dvh shadow-hover overflow-auto"
       >
         <div class="container flex-grow mx-auto relative max-w-2xl flex flex-col">
           <Show when={!loading()} fallback={<ld-loading class="m-auto" />}>

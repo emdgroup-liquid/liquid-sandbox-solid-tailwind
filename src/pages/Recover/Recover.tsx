@@ -69,7 +69,7 @@ const Recover: Component = () => {
       <main
         aria-busy={loading()}
         aria-live="polite"
-        class="flex flex-grow justify-center self-center px-ld-24 py-ld-40 min-h-screen sm:px-ld-40 lg:min-h-fit overflow-auto"
+        class="flex flex-grow justify-center self-center px-ld-24 py-ld-40 min-h-dvh sm:px-ld-40 lg:min-h-fit overflow-auto"
       >
         <div class="container flex-grow mx-auto relative max-w-2xl flex flex-col">
           <Show when={!loading()} fallback={<ld-loading class="m-auto" />}>
