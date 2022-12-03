@@ -95,7 +95,6 @@ const AddTodo: Component<AddTodoProps> = (props) => {
           class="col-span-2"
           name="description"
           tone="dark"
-          type="email"
           iconStart={
             <ld-icon>
               <svg
