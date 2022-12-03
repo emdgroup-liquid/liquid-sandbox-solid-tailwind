@@ -268,7 +268,13 @@ const SignUp: Component = () => {
                 <Show when={currentStep() === steps.length - 1}>
                   <ld-typo id="conditions-notice" variant="body-m" tag="h2">
                     By creating an account with us, you agree to our{' '}
-                    <ld-link onClick={() => navigate('/terms')}>
+                    <ld-link
+                      href="/terms"
+                      onClick={(ev) => {
+                        ev.preventDefault()
+                        navigate('/terms')
+                      }}
+                    >
                       terms&nbsp;and&nbsp;conditions
                     </ld-link>
                     .
@@ -277,7 +283,13 @@ const SignUp: Component = () => {
 
                 <ld-typo variant="body-m" tag="h2" class="mb-ld-40">
                   Already have an account?&ensp;
-                  <ld-link onClick={() => navigate('/login')}>
+                  <ld-link
+                    href="/login"
+                    onClick={(ev) => {
+                      ev.preventDefault()
+                      navigate('/login')
+                    }}
+                  >
                     Log&nbsp;in&nbsp;here
                   </ld-link>
                   .

@@ -424,7 +424,11 @@ const TodoListItem: Component<AddTodoProps> = (props) => {
                       We will send you a notification Email to your account
                       Email address. You can change your notification settings{' '}
                       <ld-link
-                        onClick={() => navigate('/notification-settings')}
+                        href="/notification-settings"
+                        onClick={(ev) => {
+                          ev.preventDefault()
+                          navigate('/notification-settings')
+                        }}
                       >
                         here
                       </ld-link>

@@ -203,7 +203,13 @@ const AccountSettings: Component = () => {
                     Your Email is used to log in into your account as well as to
                     send you notifications. You can change your notification
                     settings{' '}
-                    <ld-link onClick={() => navigate('/notification-settings')}>
+                    <ld-link
+                      href="/notification-settings"
+                      onClick={(ev) => {
+                        ev.preventDefault()
+                        navigate('/notification-settings')
+                      }}
+                    >
                       here
                     </ld-link>
                     .

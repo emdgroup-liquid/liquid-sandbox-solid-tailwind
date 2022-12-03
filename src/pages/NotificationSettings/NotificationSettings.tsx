@@ -67,7 +67,13 @@ const NotificationSettings: Component = () => {
 
         <ld-typo class="mb-6">
           You can change your email address in your{' '}
-          <ld-link onClick={() => navigate('/account-settings')}>
+          <ld-link
+            href="/account-settings"
+            onClick={(ev) => {
+              ev.preventDefault()
+              navigate('/account-settings')
+            }}
+          >
             account settings
           </ld-link>
           .

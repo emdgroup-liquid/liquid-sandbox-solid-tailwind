@@ -138,14 +138,26 @@ const Login: Component = () => {
                 <div>
                   <ld-typo variant="body-m" tag="h2">
                     Don't have an account yet?&ensp;
-                    <ld-link onClick={() => navigate('/signup')}>
+                    <ld-link
+                      href="/signup"
+                      onClick={(ev) => {
+                        ev.preventDefault()
+                        navigate('/signup')
+                      }}
+                    >
                       Sign&nbsp;up&nbsp;here.
                     </ld-link>
                   </ld-typo>
 
                   <ld-typo>
                     Problems signing in?&ensp;
-                    <ld-link onClick={() => navigate('/recover')}>
+                    <ld-link
+                      href="/recover"
+                      onClick={(ev) => {
+                        ev.preventDefault()
+                        navigate('/recover')
+                      }}
+                    >
                       Recover your account.
                     </ld-link>
                   </ld-typo>
