@@ -68,6 +68,7 @@ const AddTodo: Component<AddTodoProps> = (props) => {
     if (isTodoCreated) {
       formRef.reset()
       addTodoInputRef.querySelector('input')?.focus()
+      group.controls.task.setValue('')
       group.controls.task.markTouched(false)
     }
     group.markSubmitted(false)
