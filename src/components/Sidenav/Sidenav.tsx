@@ -9,7 +9,7 @@ interface SidenavProps {
   ref?: (el: HTMLLdSidenavElement) => void
   todos: {
     all: Todo[]
-    upcomming: Todo[]
+    upcoming: Todo[]
     done: Todo[]
     dueToday: Todo[]
   }
@@ -18,6 +18,24 @@ interface SidenavProps {
 
 const Sidenav: Component<SidenavProps> = (props) => {
   let sidenavRef: HTMLLdSidenavElement
+
+  const LOCAL_STORAGE_KEY = 'dark-light-preference'
+
+  const [isDark, setIsDark] = createSignal(
+    window.localStorage.getItem(LOCAL_STORAGE_KEY) === 'dark'
+    // ||
+    //  (window.localStorage.getItem(LOCAL_STORAGE_KEY) !== 'light' &&
+    //    window.matchMedia &&
+    //    window.matchMedia('(prefers-color-scheme: dark)').matches)
+  )
+
+  const toggleDarkLightMode = async () => {
+    setIsDark(!isDark())
+    window.localStorage.setItem(LOCAL_STORAGE_KEY, isDark() ? 'dark' : 'light')
+    document.body.classList.add(`ui-${isDark() ? 'dark' : 'light'}`)
+    document.body.classList.remove(`ui-${!isDark() ? 'dark' : 'light'}`)
+    document.documentElement.style.colorScheme = isDark() ? 'dark' : 'auto'
+  }
 
   const navigate = useNavigate()
   const [loggingOut, setLoggingOut] = createSignal(false)
@@ -33,6 +51,8 @@ const Sidenav: Component<SidenavProps> = (props) => {
     await deleteSession()
     setLoggingOut(false)
     navigate('/login', { replace: true })
+    document.body.classList.remove('ui-themable')
+    document.documentElement.style.colorScheme = 'auto'
   }
 
   const onNavitemClick = (path: string) => {
@@ -82,6 +102,26 @@ const Sidenav: Component<SidenavProps> = (props) => {
             to="/todo"
           />
         </ld-sidenav-header>
+        <div slot="top" class="py-ld-16 pl-ld-16 pr-ld-8 flex items-center">
+          <ld-icon
+            style={{ transform: 'scale(1.2) translateX(1px)' }}
+            class="ml-ld-4 mr-ld-12"
+            aria-hidden="true"
+            name="meetup"
+            size="lg"
+          />
+          <ld-label class="w-full ml-ld-2" position="left" size="m">
+            <ld-typo variant="label-s">Use dark mode</ld-typo>
+            <ld-toggle
+              style={{
+                transform: 'scale(0.7)',
+              }}
+              checked={isDark()}
+              class="ml-auto"
+              onChange={toggleDarkLightMode}
+            />
+          </ld-label>
+        </div>
         <ld-sidenav-slider label="To-Do">
           <ld-sidenav-heading>Your tasks</ld-sidenav-heading>
           <ld-sidenav-navitem
@@ -91,10 +131,10 @@ const Sidenav: Component<SidenavProps> = (props) => {
             rounded
             selected={props.pathname() === '/todo'}
           >
-            <ld-icon slot="icon" name="calendar" /> Upcomming{' '}
-            <Show when={!!props.todos.upcomming.length}>
+            <ld-icon slot="icon" name="calendar" /> Upcoming{' '}
+            <Show when={!!props.todos.upcoming.length}>
               <ld-badge class="ml-ld-4 origin-left scale-75 -translate-y-px text-vc-100 -my-ld-4">
-                {props.todos.upcomming.length} <ld-sr-only>total</ld-sr-only>
+                {props.todos.upcoming.length} <ld-sr-only>total</ld-sr-only>
               </ld-badge>
             </Show>
           </ld-sidenav-navitem>

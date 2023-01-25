@@ -42,7 +42,7 @@ const Todo: Component = () => {
       case '/todo/done':
         return todos.done
       default:
-        return todos.upcomming
+        return todos.upcoming
     }
   })
 
@@ -85,7 +85,7 @@ const Todo: Component = () => {
       <Show when={!loading()} fallback={<ld-loading class="m-auto" />}>
         <>
           <ld-typo variant="h2" tag="h1" class="mt-6 xs:mt-1 mb-6">
-            <Switch fallback={'Upcomming'}>
+            <Switch fallback={'Upcoming'}>
               <Match when={pathname() === '/todo/due-today'}>Due today</Match>
               <Match when={pathname() === '/todo/done'}>Done</Match>
             </Switch>

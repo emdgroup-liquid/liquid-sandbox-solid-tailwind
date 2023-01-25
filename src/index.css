@@ -5,6 +5,26 @@
 :where(html) {
   display: grid;
   height: 100vh;
+  color: var(--ld-col-neutral-900)
+}
+
+:where(main) {
+  background-color: var(--ld-col-wht)
+}
+
+.ui-themable {
+  background-color: var(--ld-col-wht);
+}
+/*@media (prefers-color-scheme: dark) {
+  .ui-themable {
+    filter: invert(0.9) hue-rotate(180deg);
+  }
+}*/
+.ui-themable.ui-dark {
+  filter: invert(0.9) hue-rotate(180deg);
+}
+.ui-themable.ui-light {
+  filter: none !important;
 }
 
 @layer components {

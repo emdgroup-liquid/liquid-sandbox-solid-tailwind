@@ -32,7 +32,7 @@ const NotificationSettings: Component = () => {
       dispatchEvent(
         new CustomEvent('ldNotificationAdd', {
           detail: {
-            content: 'Task has been updated.',
+            content: 'Settings have been saved.',
             type: 'info',
           },
         })
@@ -41,7 +41,7 @@ const NotificationSettings: Component = () => {
       dispatchEvent(
         new CustomEvent('ldNotificationAdd', {
           detail: {
-            content: (err as Error)?.message || 'Failed updating task.',
+            content: (err as Error)?.message || 'Failed updating settings.',
             type: 'alert',
           },
         })
