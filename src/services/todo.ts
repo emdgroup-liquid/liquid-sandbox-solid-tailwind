@@ -5,7 +5,7 @@ import { createStore } from 'solid-js/store'
 
 const [state, setState] = createStore({
   all: [] as Todo[],
-  get upcomming() {
+  get upcoming() {
     return this.all.filter((todo) => !todo.done)
   },
   get done() {

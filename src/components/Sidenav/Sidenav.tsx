@@ -9,7 +9,7 @@ interface SidenavProps {
   ref?: (el: HTMLLdSidenavElement) => void
   todos: {
     all: Todo[]
-    upcomming: Todo[]
+    upcoming: Todo[]
     done: Todo[]
     dueToday: Todo[]
   }
@@ -91,10 +91,10 @@ const Sidenav: Component<SidenavProps> = (props) => {
             rounded
             selected={props.pathname() === '/todo'}
           >
-            <ld-icon slot="icon" name="calendar" /> Upcomming{' '}
-            <Show when={!!props.todos.upcomming.length}>
+            <ld-icon slot="icon" name="calendar" /> Upcoming{' '}
+            <Show when={!!props.todos.upcoming.length}>
               <ld-badge class="ml-ld-4 origin-left scale-75 -translate-y-px text-vc-100 -my-ld-4">
-                {props.todos.upcomming.length} <ld-sr-only>total</ld-sr-only>
+                {props.todos.upcoming.length} <ld-sr-only>total</ld-sr-only>
               </ld-badge>
             </Show>
           </ld-sidenav-navitem>
